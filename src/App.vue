@@ -10,16 +10,18 @@
 			<q-page-container>
 				<q-page>
 					<!-- place QPageSticky at end of page -->
-						<q-page-sticky expand :position="stickposition" v-scroll="scrolled">
+					<q-page-sticky expand :position="stickposition" v-scroll="scrolled">
 						<q-toolbar class="toolbar glossy">
 							<router-link to="/">
 								<img class="headerImage" alt="" src="./assets/toplogo.png" width="30%">
 							</router-link>
-							<router-link class="block" id="navbutton" to="/background">Background</router-link>
-							<router-link class="block" id="navbutton" to="/tutorials">Tutorials</router-link>
+							
+							<q-btn to="/background" label="Background" class="topButton" no-caps stretch flat />
+							<q-btn to="/tutorials" label="Tutorials" class="topButton" no-caps stretch flat />
 						</q-toolbar>
 					</q-page-sticky>
-					<router-view :style="textposition" />
+					<div style="height: 50px; width: 100%;"></div>
+					<router-view />
 				</q-page>
 			</q-page-container>
 		</q-layout>
@@ -35,7 +37,6 @@ export default {
 		apiUrl: "",
 		navMenu: true,
 		stickposition: "",
-		textposition: "",
 		home: false
     }
   },
@@ -43,11 +44,9 @@ export default {
 	scrolled(position)	{
 		if(position>300 && this.stickposition!=="top") {
 			this.stickposition="top"
-			this.textposition = "margin-top: 0px"
 		}
 		else if(position<=300 && this.stickposition!=="") {
-		this.stickposition=""
-		this.textposition=""
+			this.stickposition=""
 		}
 	}
   }
@@ -93,19 +92,8 @@ export default {
   border-right-width: 3px;
 }
 
-.block {
-  display: block;
-  width: 200px;
-  border: none;
-  padding: 8px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  color: white;
-  align: right;
-  font-size: 20px;
-  border-left: 1px solid #787877;
+.topButton {
+  border-left: 1px solid #787877 !important;
 }
 
 .button:hover {background-color: #3e8e41}
