@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-		<h6>Find tutorials below</h6>
+		<h6>Need to load in tutorial2</h6>
 		
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus auctor eros non metus pretium, at eleifend eros finibus. Suspendisse vel turpis efficitur, porttitor eros id, interdum est. Sed eu condimentum libero, at maximus nunc. Aenean sodales suscipit enim vel sodales. Nunc fermentum sagittis malesuada. Vestibulum pulvinar purus at malesuada aliquam. Integer vitae ipsum imperdiet, fringilla mi ut, interdum leo. Pellentesque ut magna a elit tempor tristique quis sit amet neque. Nunc semper et massa vel viverra. Duis fermentum aliquet libero, sit amet consectetur lorem fringilla in. Suspendisse nunc dui, aliquam et scelerisque sit amet, mattis nec velit. Maecenas malesuada tortor sit amet mi ornare, in laoreet justo finibus. Aliquam erat volutpat. Pellentesque suscipit lacus ut aliquam facilisis.
 

@@ -16,8 +16,26 @@
 								<img class="headerImage" alt="" src="./assets/toplogo.png" width="30%">
 							</router-link>
 							
-							<q-btn to="/background" label="Background" class="topButton" no-caps stretch flat />
-							<q-btn to="/tutorials" label="Tutorials" class="topButton" no-caps stretch flat />
+							<q-btn label="Background" to="/background" class="topButton" no-caps stretch flat />
+							<q-btn-dropdown label="Tutorials" class="topButton" no-caps stretch flat>
+								<q-list>
+									<q-item clickable to="/intro" v-close-popup>
+										<q-item-section>
+											<q-item-label>Intro into Gemicai</q-item-label>
+										</q-item-section>
+									</q-item>
+									<q-item clickable to="/tutorial1" v-close-popup>
+										<q-item-section>
+											<q-item-label>Tutorial 2</q-item-label>
+										</q-item-section>
+									</q-item>
+									<q-item clickable to="/tutorial2" v-close-popup>
+										<q-item-section>
+											<q-item-label>Tutorial 3</q-item-label>
+										</q-item-section>
+									</q-item>
+								</q-list>
+							</q-btn-dropdown>
 						</q-toolbar>
 					</q-page-sticky>
 					<div style="height: 50px; width: 100%;"></div>
@@ -95,8 +113,6 @@ export default {
 .topButton {
   border-left: 1px solid #787877 !important;
 }
-
-.button:hover {background-color: #3e8e41}
 
 .imageContainer {
 	max-height: 200px;
