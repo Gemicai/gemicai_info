@@ -15,5 +15,8 @@ module.exports = {
       }
       return options
     })
+
+    // Parse .pynbhtml files as raw text, so we can include them into pages.
+    config.module.rule('raw').test(/\.pynbhtml$/).use('raw-loader').loader('raw-loader').end()
   }
 }

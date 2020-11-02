@@ -1,8 +1,8 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-		<h6>A background on Gemicai</h6>
-		
+		<h6 class="q-mt-none">Documentation</h6>
+
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus auctor eros non metus pretium, at eleifend eros finibus. Suspendisse vel turpis efficitur, porttitor eros id, interdum est. Sed eu condimentum libero, at maximus nunc. Aenean sodales suscipit enim vel sodales. Nunc fermentum sagittis malesuada. Vestibulum pulvinar purus at malesuada aliquam. Integer vitae ipsum imperdiet, fringilla mi ut, interdum leo. Pellentesque ut magna a elit tempor tristique quis sit amet neque. Nunc semper et massa vel viverra. Duis fermentum aliquet libero, sit amet consectetur lorem fringilla in. Suspendisse nunc dui, aliquam et scelerisque sit amet, mattis nec velit. Maecenas malesuada tortor sit amet mi ornare, in laoreet justo finibus. Aliquam erat volutpat. Pellentesque suscipit lacus ut aliquam facilisis.
 
 		Cras elementum nibh at lacinia faucibus. Nam aliquet bibendum tellus eu pellentesque. Curabitur malesuada nec est in posuere. Suspendisse efficitur rutrum tortor pellentesque interdum. Aenean elit mauris, convallis eu pulvinar a, aliquet in metus. Fusce tellus libero, efficitur eget tempor vel, faucibus vel turpis. Sed ac tristique enim. Fusce congue magna est, vitae viverra risus fermentum sit amet. Curabitur finibus nisl vel ipsum semper iaculis. Quisque laoreet est nisi, in semper metus cursus rutrum. Sed finibus orci nec vehicula accumsan. Suspendisse neque justo, tempus posuere lectus condimentum, lacinia sagittis velit. Suspendisse sed ornare leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc sed egestas tortor, non sagittis mauris. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: "StudyList",
+  name: "Documentation",
 }
 </script>
 

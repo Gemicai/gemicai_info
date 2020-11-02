@@ -1,7 +1,7 @@
 <template>
   <q-page>
-	<div class="q-pa-md">
-		<h6 class="q-mt-none">Home</h6>
+    <div class="q-pa-md">
+		<h6 class="q-mt-none">About Us</h6>
 
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus auctor eros non metus pretium, at eleifend eros finibus. Suspendisse vel turpis efficitur, porttitor eros id, interdum est. Sed eu condimentum libero, at maximus nunc. Aenean sodales suscipit enim vel sodales. Nunc fermentum sagittis malesuada. Vestibulum pulvinar purus at malesuada aliquam. Integer vitae ipsum imperdiet, fringilla mi ut, interdum leo. Pellentesque ut magna a elit tempor tristique quis sit amet neque. Nunc semper et massa vel viverra. Duis fermentum aliquet libero, sit amet consectetur lorem fringilla in. Suspendisse nunc dui, aliquam et scelerisque sit amet, mattis nec velit. Maecenas malesuada tortor sit amet mi ornare, in laoreet justo finibus. Aliquam erat volutpat. Pellentesque suscipit lacus ut aliquam facilisis.
 
@@ -12,16 +12,16 @@
 		Etiam accumsan vehicula mi at tristique. Nullam pulvinar non augue ut molestie. Fusce ac nibh vitae ipsum elementum venenatis et nec ipsum. Suspendisse potenti. Nullam nulla purus, porta eu varius eget, sodales nec tortor. Aliquam varius pretium augue, ac lobortis urna feugiat a. Pellentesque dictum viverra vehicula. Morbi congue ante nec maximus consequat. Praesent iaculis tristique ligula a convallis.
 
 		Aenean pretium felis nec mi porttitor sodales. Curabitur nulla neque, porta ut libero id, ornare interdum massa. Aenean condimentum lacus magna, sit amet eleifend justo imperdiet placerat. Nulla sollicitudin tincidunt tortor, ut aliquam turpis blandit a. Pellentesque dapibus libero nulla, non hendrerit magna rhoncus vel. Phasellus et condimentum felis. Curabitur purus ex, blandit et vestibulum ut, convallis ut lacus. Praesent neque lacus, bibendum sed feugiat ac, pellentesque eget augue. Praesent sit amet dui a erat sollicitudin ultrices ac vitae justo. Aenean ac bibendum ante. Morbi ac tellus id arcu malesuada pharetra eu at mauris. Donec pulvinar mi sed leo suscipit, ut volutpat ipsum convallis. Quisque condimentum mi nec venenatis efficitur. Aliquam erat volutpat. Fusce suscipit nibh eget libero eleifend, mattis egestas justo mollis. Quisque dui lectus, tincidunt id interdum eu, rhoncus in turpis.
-	</div>
+    </div>
   </q-page>
 </template>
 
 <script>
 export default {
-  name: "Home",
+  name: "AboutUs",
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 </style>

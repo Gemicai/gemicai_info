@@ -1,0 +1,472 @@
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Gemicai-tutorial-3:-Gemicai-Dataset">Gemicai tutorial 3: Gemicai Dataset<a class="anchor-link" href="#Gemicai-tutorial-3:-Gemicai-Dataset">&#182;</a></h1><p>This tutorial is about everything concerning Gemicai datasets, or gemsets for short.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gemicai</span> <span class="k">as</span> <span class="nn">gem</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="nn">models</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p style="color:green"> @Mateusz theres some simple functionality I think the gemsets should have in the beta release, could you implement this? </p>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="3.1-Initialize-gemset">3.1 Initialize gemset<a class="anchor-link" href="#3.1-Initialize-gemset">&#182;</a></h2><p>Some text</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dicom_data</span> <span class="o">=</span> <span class="s1">&#39;/mnt/SharedStor/tutorials/Mammography/&#39;</span>
+
+<span class="c1"># Let&#39;s find out how many dicom images we have.</span>
+<span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dir_info</span><span class="p">(</span><span class="n">dicom_data</span><span class="p">)</span>
+
+<span class="n">gemset_destination</span> <span class="o">=</span> <span class="s1">&#39;/mnt/SharedStor/tutorials/tutorial3&#39;</span>
+
+<span class="c1"># Specify the relevant Dicom attributes you want to use.</span>
+<span class="n">dicom_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Modality&#39;</span><span class="p">,</span> <span class="s1">&#39;BodyPartExamined&#39;</span><span class="p">,</span> <span class="s1">&#39;StudyDescription&#39;</span><span class="p">,</span> <span class="s1">&#39;SeriesDescription&#39;</span><span class="p">]</span>
+
+
+<span class="c1"># gem.dicom_to_gemset(data_origin=dicom_data, data_destination=gemset_destination, relevant_labels=dicom_attributes, </span>
+<span class="c1">#                     objects_per_file=100, test_split=0.2, verbosity=1)</span>
+
+<span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dir_info</span><span class="p">(</span><span class="n">gemset_destination</span><span class="p">)</span>
+
+<span class="n">gemset</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">DicomoDataset</span><span class="o">.</span><span class="n">get_dicomo_dataset</span><span class="p">(</span><span class="n">gemset_destination</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">dicom_attributes</span><span class="p">)</span>
+
+<span class="n">gemset</span><span class="o">.</span><span class="n">summarize</span><span class="p">(</span><span class="s1">&#39;SeriesDescription&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>| Extension   |   Files | Size    |
+|-------------+---------+---------|
+| .dcm.gz     |    1061 | 5.75 GB | 
+
+| Extension   |   Files | Size    |
+|-------------+---------+---------|
+| .gemset     |      11 | 31.6 MB | 
+
+| Class (SeriesDescription)          |   Frequency |
+|------------------------------------+-------------|
+| R MLO                              |         227 |
+| R CC                               |         235 |
+| L CC                               |         219 |
+| None                               |          57 |
+| L LM                               |          12 |
+| L MLO                              |         218 |
+| L XCCL                             |          16 |
+| L SPECIMEN                         |          12 |
+| Mammografie SVOB beiderzijds       |           4 |
+| R SPECIMEN                         |          12 |
+| Mammopunctie stereotactisch rechts |           4 |
+| R LM                               |          11 |
+| R XCCL                             |          18 |
+| Mammopunctie stereotactisch links  |          10 |
+| R CCID                             |           2 |
+| L CCID                             |           2 |
+| Mammografie mammapoli beiderzijds  |           1 |
+| L MLOID                            |           1 |
+
+Total number of training images: 1061 
+Total number of classes: 18
+
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="3.2-Tweaking-gemset">3.2 Tweaking gemset<a class="anchor-link" href="#3.2-Tweaking-gemset">&#182;</a></h2><p>To get the most out of your neural network, data selection is very important. Some text</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># These are all orientations we are interested in classifing.</span>
+<span class="n">orientations</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;L MLO&#39;</span><span class="p">,</span> <span class="s1">&#39;R MLO&#39;</span><span class="p">,</span> <span class="s1">&#39;L CC&#39;</span><span class="p">,</span> <span class="s1">&#39;R CC&#39;</span><span class="p">,</span> <span class="s1">&#39;L LM&#39;</span><span class="p">,</span> <span class="s1">&#39;R LM&#39;</span><span class="p">,</span> <span class="s1">&#39;L XCCL&#39;</span><span class="p">,</span> <span class="s1">&#39;R XCCL&#39;</span><span class="p">,</span> <span class="s1">&#39;L SPECIMEN&#39;</span><span class="p">,</span> <span class="s1">&#39;R SPECIMEN&#39;</span><span class="p">]</span>
+
+<span class="n">constraints</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Modality&#39;</span><span class="p">:</span> <span class="s1">&#39;MG&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SeriesDescription&#39;</span><span class="p">:</span> <span class="n">orientations</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">subset</span> <span class="o">=</span> <span class="n">gemset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
+
+<span class="n">subset</span><span class="o">.</span><span class="n">summarize</span><span class="p">(</span><span class="s1">&#39;SeriesDescription&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>| Class (SeriesDescription)   |   Frequency |
+|-----------------------------+-------------|
+| R MLO                       |         227 |
+| R CC                        |         235 |
+| L CC                        |         219 |
+| L LM                        |          12 |
+| L MLO                       |         218 |
+| L XCCL                      |          16 |
+| L SPECIMEN                  |          12 |
+| R SPECIMEN                  |          12 |
+| R LM                        |          11 |
+| R XCCL                      |          18 |
+
+Total number of training images: 980 
+Total number of classes: 10
+
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="GemicaiDataset.save()">GemicaiDataset.save()<a class="anchor-link" href="#GemicaiDataset.save()">&#182;</a></h3><p style="color:green"> .subset right now doesnt make a new gemset, it just applies constraints on an existing gemset, this needs to be explained. Also, if the subset is small compared the original gemset, its performance will be significantly worse. Therefore we sometimes might want to create a subset from a gemset and store it else where. GemicaiDataset should have a function self.save(dir) </p>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">safe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+    <span class="c1">#TODO: implement function</span>
+    <span class="k">pass</span>
+
+<span class="n">subset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;example&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="GemicaiDataset.erase()">GemicaiDataset.erase()<a class="anchor-link" href="#GemicaiDataset.erase()">&#182;</a></h3><p style="color:green"> We might also want to delete obsolete gemsets </p>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">erase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1">#TODO: implement function</span>
+    <span class="k">pass</span>
+
+<span class="n">gemset</span><span class="o">.</span><span class="n">erase</span><span class="p">()</span>
+<span class="n">gemset</span> <span class="o">=</span> <span class="n">subset</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="GemicaiDataset.split()">GemicaiDataset.split()<a class="anchor-link" href="#GemicaiDataset.split()">&#182;</a></h3><p style="color:green"> We almost always need to split the dataset in to a train- and test-dataset, why not make a function for this. </p>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">sets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">],</span> <span class="n">self_erase_afterwards</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">ratio</span><span class="p">]</span>
+    
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sets</span><span class="p">),</span> <span class="s1">&#39;Specify a ratio for every set you want to create&#39;</span>
+    <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;The sum of all ratios should be 1&#39;</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sets</span><span class="p">):</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># TODO: create random subset</span>
+        <span class="n">subset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_path</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">self_erase_afterwards</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">erase</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>This splits the gemset into a training set with 80% of the original gemsets' size,  and a test set with 20% of the original gemsets' size</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gemset</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p style="color:green"> This creates a test-, validation- and test-set. This is a quite standard thing people in machine learning want to do </p>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gemset</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">],</span> <span class="n">sets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;validation&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="GemicaiDataset.getitem()">GemicaiDataset.<strong>getitem</strong>()<a class="anchor-link" href="#GemicaiDataset.getitem()">&#182;</a></h3><p style="color:green"> When passing a gemset with more than 1 label to a classifier, it crashes (I put in the exception handling but otherwise it still crashes). I figured that it might be nice to use __getitem__ to fix this, what do you think? </p>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">isistance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Specified argument not in gemset labels. Valid labels are: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">arg</span><span class="p">],</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize classifier</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">Classifier</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">gemset</span><span class="o">.</span><span class="n">classes</span><span class="p">(</span><span class="s1">&#39;SeriesDescription&#39;</span><span class="p">),</span> <span class="n">enable_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">gemset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-6-01c21a505be3&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> net <span class="ansi-blue-fg">=</span> gem<span class="ansi-blue-fg">.</span>Classifier<span class="ansi-blue-fg">(</span>models<span class="ansi-blue-fg">.</span>resnet18<span class="ansi-blue-fg">(</span>pretrained<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> gemset<span class="ansi-blue-fg">.</span>classes<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;SeriesDescription&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> enable_cuda<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> 
+<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg"> </span>net<span class="ansi-blue-fg">.</span>train<span class="ansi-blue-fg">(</span>gemset<span class="ansi-blue-fg">,</span> epochs<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">,</span> verbosity<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/utilities/gemicai/Classifier.py</span> in <span class="ansi-cyan-fg">train</span><span class="ansi-blue-fg">(self, dataset, batch_size, epochs, num_workers, pin_memory, verbosity, test_dataset, output_policy)</span>
+<span class="ansi-green-intense-fg ansi-bold">     54</span>     def train(self, dataset, batch_size=4, epochs=20, num_workers=0, pin_memory=False,
+<span class="ansi-green-intense-fg ansi-bold">     55</span>               verbosity=0, test_dataset=None, output_policy=policy.ToConsole()):
+<span class="ansi-green-fg">---&gt; 56</span><span class="ansi-red-fg">         Classifier.validate_dataset_parameters(dataset, batch_size, epochs, num_workers, pin_memory,
+</span><span class="ansi-green-intense-fg ansi-bold">     57</span>                                                test_dataset, verbosity, output_policy)
+<span class="ansi-green-intense-fg ansi-bold">     58</span> 
+
+<span class="ansi-green-fg">~/utilities/gemicai/Classifier.py</span> in <span class="ansi-cyan-fg">validate_dataset_parameters</span><span class="ansi-blue-fg">(dataset, batch_size, epochs, num_workers, pin_memory, test_dataset, verbosity, output_policy)</span>
+<span class="ansi-green-intense-fg ansi-bold">    227</span> 
+<span class="ansi-green-intense-fg ansi-bold">    228</span>         <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>next<span class="ansi-blue-fg">(</span>iter<span class="ansi-blue-fg">(</span>dataset<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">!=</span> <span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 229</span><span class="ansi-red-fg">             raise ValueError(&#39;Specify what label should be classified. This dataset containts the labels {}. E.g. try&#39;
+</span><span class="ansi-green-intense-fg ansi-bold">    230</span>                              &#39;again dataset[\&#39;{}\&#39;] or dataset[0]&#39;.format(dataset.labels, dataset.labels[0]))
+<span class="ansi-green-intense-fg ansi-bold">    231</span> 
+
+<span class="ansi-red-fg">ValueError</span>: Specify what label should be classified. This dataset containts the labels [&#39;Modality&#39;, &#39;BodyPartExamined&#39;, &#39;StudyDescription&#39;, &#39;SeriesDescription&#39;]. E.g. tryagain dataset[&#39;Modality&#39;] or dataset[0]</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># If implemented correctly this should work</span>
+<span class="n">net</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">gemset</span><span class="p">[</span><span class="s1">&#39;SeriesDescription&#39;</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># This does the same</span>
+<span class="n">net</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">gemset</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NotImplementedError</span>                       Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-12-cc787a744abd&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># If implemented correctly this should work</span>
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>net<span class="ansi-blue-fg">.</span>train<span class="ansi-blue-fg">(</span>gemset<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;SeriesDescription&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> epochs<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">,</span> verbosity<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> 
+<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-red-fg"># This does the same</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span> net<span class="ansi-blue-fg">.</span>train<span class="ansi-blue-fg">(</span>gemset<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> epochs<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">,</span> verbosity<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/gemicai/lib/python3.8/site-packages/torch/utils/data/dataset.py</span> in <span class="ansi-cyan-fg">__getitem__</span><span class="ansi-blue-fg">(self, index)</span>
+<span class="ansi-green-intense-fg ansi-bold">     23</span> 
+<span class="ansi-green-intense-fg ansi-bold">     24</span>     <span class="ansi-green-fg">def</span> __getitem__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> index<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 25</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">raise</span> NotImplementedError
+<span class="ansi-green-intense-fg ansi-bold">     26</span> 
+<span class="ansi-green-intense-fg ansi-bold">     27</span>     <span class="ansi-green-fg">def</span> __add__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> other<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">NotImplementedError</span>: </pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Correct-dataset">Correct dataset<a class="anchor-link" href="#Correct-dataset">&#182;</a></h3><p style="color:green"> Rn this function is in gemicai/data_inpection.py and does nothing yet. Can you implement this and make it as user friendly as possible? I presume mostly radiologist will be using this function </p>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gem</span><span class="o">.</span><span class="n">correct_dataset</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">gemset</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
