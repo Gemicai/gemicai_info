@@ -41,7 +41,7 @@
       </q-header>
 
       <q-drawer v-if="onTutorialPage()" show-if-above v-model="left" side="left" bordered>
-        <q-list bordered separator>
+        <q-list separator>
           <div v-for="tutorial of tutorials" :key="tutorial.id">
             <q-item clickable v-ripple :to="'/tutorials/' + tutorial.id" :class="isCurrent(tutorial.id) ? 'bg-accent text-white' : 'bg-white text-black'">
               <q-item-section>{{ tutorial.id }} - {{ tutorial.title }}</q-item-section>
