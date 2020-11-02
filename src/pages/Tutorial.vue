@@ -11,40 +11,15 @@
 </template>
 
 <script>
-import tutorial1Content from '../tutorials/gemicai_tutorial_1.pynbhtml';
-import tutorial2Content from '../tutorials/gemicai_tutorial_2.pynbhtml';
-import tutorial3Content from '../tutorials/gemicai_tutorial_3.pynbhtml';
-import tutorial5Content from '../tutorials/gemicai_tutorial_5.pynbhtml';
 import JupyterNotebookHTML from "../components/JupyterNotebookHTML";
+import tutorials from "../tutorials/tutorials";
 
 export default {
   name: "Tutorial",
   components: {JupyterNotebookHTML},
   data() {
     return {
-      tutorials: [
-        {
-          id: 1,
-          pynb_link: "https://github.com/Gemicai/Gemicai/blob/master/tutorials/gemicai_tutorial_1.ipynb",
-          contents: tutorial1Content
-        }, {
-          id: 2,
-          pynb_link: "https://github.com/Gemicai/Gemicai/blob/master/tutorials/gemicai_tutorial_2.ipynb",
-          contents: tutorial2Content
-        }, {
-          id: 3,
-          pynb_link: "https://github.com/Gemicai/Gemicai/blob/master/tutorials/gemicai_tutorial_3.ipynb",
-          contents: tutorial3Content
-        }, {
-          id: 4,
-          pynb_link: "https://github.com/Gemicai/Gemicai/blob/master/tutorials/gemicai_tutorial_4.ipynb",
-          contents: null
-        }, {
-          id: 5,
-          pynb_link: "https://github.com/Gemicai/Gemicai/blob/master/tutorials/gemicai_tutorial_5.ipynb",
-          contents: tutorial5Content
-        },
-      ]
+      tutorials: tutorials
     }
   },
   computed: {
