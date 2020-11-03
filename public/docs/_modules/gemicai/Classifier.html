@@ -1,0 +1,620 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.Classifier &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.Classifier</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.Classifier</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains a Classifier class which simplifies model training and evaluation process by abstracting away</span>
+<span class="sd">many implementation details. As a result this module allows the user to save a lot of time by providing a default</span>
+<span class="sd">implementation for many of the PyTorch options.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">gemicai.classifier_functors</span> <span class="k">as</span> <span class="nn">functr</span>
+<span class="kn">import</span> <span class="nn">gemicai.data_iterators</span> <span class="k">as</span> <span class="nn">iterators</span>
+<span class="kn">import</span> <span class="nn">gemicai.output_policies</span> <span class="k">as</span> <span class="nn">policy</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">gemicai.utils</span> <span class="kn">import</span> <span class="n">strfdelta</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">import</span> <span class="nn">gemicai</span> <span class="k">as</span> <span class="nn">gem</span>
+
+
+<div class="viewcode-block" id="Classifier"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier">[docs]</a><span class="k">class</span> <span class="nc">Classifier</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class does all of the heavy lifting when it comes down to the model training, evaluation and tensor</span>
+<span class="sd">    classification. During creation of this class it is possible to specify the following attributes:</span>
+
+<span class="sd">    :param module: specifies a model to train, for more information about models themselves please refer</span>
+<span class="sd">        to the https://pytorch.org/docs/stable/torchvision/models</span>
+<span class="sd">    :type module: nn.Module</span>
+<span class="sd">    :param classes: a list of classes present in the dataset, this will be used in order to modify model&#39;s last layer.</span>
+<span class="sd">        For more information about how to obtain such a list please refer to the classes method of the</span>
+<span class="sd">        gemicai.data_iterators.DicomoDataset</span>
+<span class="sd">    :type classes: list</span>
+<span class="sd">    :param layer_config: optional parameter containing a functor that can be used to modify a given model.</span>
+<span class="sd">        For more information please refer to the gemicai.classifier_functors module</span>
+<span class="sd">    :type layer_config: Optional[gemicai.classifier_functors.GEMICAIABCFunctor]</span>
+<span class="sd">    :param loss_function: optional parameter containing a loss function used during a training.</span>
+<span class="sd">    :type loss_function: Optional[nn.Module]</span>
+<span class="sd">    :param optimizer: optional parameter containing an optimizer used during a training.</span>
+<span class="sd">    :type optimizer: Optional[torch.optim.Optimizer]</span>
+<span class="sd">    :param enable_cuda: if set to True the training will be done on the gpu otherwise the model will be</span>
+<span class="sd">            trained on the cpu. Please note that training on a gpu is substantially faster.</span>
+<span class="sd">    :type enable_cuda: Optional[bool]</span>
+<span class="sd">    :param cuda_device: allows for selection of a particular cuda device if enable_cuda is set to True. PyTorch&#39;s</span>
+<span class="sd">        Device ids start at 0 and are incremented by one.</span>
+<span class="sd">    :type cuda_device: Optional[int]</span>
+<span class="sd">    :raise RuntimeError: raised if the cuda device was selected but its not supported by the underlying machine</span>
+<span class="sd">    :raises TypeError: raised if any of the parameters is of an invalid type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">layer_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">enable_cuda</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cuda_device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="c1"># Sets base module of the classifier</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;module_wrapper should extend a nn.Modules class&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Provide a valid list with classes&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="n">classes</span>
+
+        <span class="c1"># Sets a functor that allows us to configure the layers for training/evaluating</span>
+        <span class="k">if</span> <span class="n">layer_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_config</span> <span class="o">=</span> <span class="n">functr</span><span class="o">.</span><span class="n">DefaultLastLayerConfig</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">functr</span><span class="o">.</span><span class="n">GEMICAIABCFunctor</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;layer_config should extend a gemicai.classifier_functors.GEMICAIABCFunctor&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_config</span> <span class="o">=</span> <span class="n">layer_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">enable_cuda</span> <span class="o">=</span> <span class="n">enable_cuda</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_device</span><span class="p">(</span><span class="n">enable_cuda</span><span class="p">,</span> <span class="n">cuda_device</span><span class="p">)</span>
+
+        <span class="c1"># set a proper loss function</span>
+        <span class="k">if</span> <span class="n">loss_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_function</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Custom loss_function should have a base class of nn.Module&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span> <span class="o">=</span> <span class="n">loss_function</span>
+
+        <span class="c1"># set a proper optimizer</span>
+        <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Custom optimizer should have a base class of torch.optim.Optimizer&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+
+<div class="viewcode-block" id="Classifier.train"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_policy</span><span class="o">=</span><span class="n">policy</span><span class="o">.</span><span class="n">ToConsole</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;Used to train a model.</span>
+
+<span class="sd">        :param dataset: dataset iterator used in order to train a model</span>
+<span class="sd">        :type dataset: gemicai.data_iterators.GemicaiDataset</span>
+<span class="sd">        :param batch_size: number (non-negative) of DataObject which will be feed into a classifier at once</span>
+<span class="sd">        :type batch_size: int</span>
+<span class="sd">        :param epochs: specifies how many training iterations (non-negative) to perform. One iteration goes over a</span>
+<span class="sd">            whole dataset.</span>
+<span class="sd">        :type epochs: int</span>
+<span class="sd">        :param num_workers: number (non-negative) of worker threads used to load data from the dataset</span>
+<span class="sd">        :type num_workers: int</span>
+<span class="sd">        :param pin_memory: whenever memory pages should be pinned or not. If set to false there is a possibility</span>
+<span class="sd">            that memory pages might be moved to a swap decreasing overall program&#39;s performance.</span>
+<span class="sd">        :type pin_memory: bool</span>
+<span class="sd">        :param verbosity: specifies verbosity (non-negative) of training/evaluation output. 0 - no output, 1 - basic</span>
+<span class="sd">            output, 2 or more - extended output</span>
+<span class="sd">        :type verbosity: int</span>
+<span class="sd">        :param test_dataset: optional parameter, if a test_dataset iterator is passed and verbosity is set to at least 2</span>
+<span class="sd">            it will be used in order to evaluate model&#39;s performance after a training epoch.</span>
+<span class="sd">        :type test_dataset: Union[None, gemicai.data_iterators.GemicaiDataset]</span>
+<span class="sd">        :param output_policy: specifies how and where to write the training statistics</span>
+<span class="sd">        :type output_policy: gemicai.output_policies.OutputPolicy</span>
+<span class="sd">        :raises TypeError: if passed arguments are not of a correct type or their values are outside of valid</span>
+<span class="sd">            bounds this method will raise a TypeError exception.</span>
+<span class="sd">        :raises ValueError: thrown whenever given data iterator object returns object containing more than two entries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Classifier</span><span class="o">.</span><span class="n">validate_dataset_parameters</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+                                               <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">,</span> <span class="n">test_dataset</span><span class="o">=</span><span class="n">test_dataset</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span>
+                                               <span class="n">output_policy</span><span class="o">=</span><span class="n">output_policy</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dataset</span><span class="o">.</span><span class="n">can_be_parallelized</span><span class="p">():</span>
+            <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">data_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                  <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+
+        <span class="c1"># Puts module in training mode.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">output_policy</span><span class="o">.</span><span class="n">training_header</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+            <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_loader</span><span class="p">):</span>
+                <span class="c1"># get the inputs; data is a list of [tensors, labels]</span>
+                <span class="n">tensors</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+                <span class="n">tensors</span> <span class="o">=</span> <span class="n">tensors</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="c1"># labels returned by the data loader are strings, we need to convert this to an int</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span> \
+                    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+
+                <span class="c1"># zero the parameter gradients</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+                <span class="c1"># forward + backward + optimize</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+                <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+                <span class="n">running_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">epoch_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                <span class="n">eta</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">epochs</span> <span class="o">-</span> <span class="n">epoch</span><span class="p">)</span> <span class="o">*</span> <span class="n">epoch_time</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+                <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span>
+                <span class="c1"># Evaluating models increases epoch time significantly</span>
+                <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">train_acc</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">dataset</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span>
+                    <span class="k">if</span> <span class="n">test_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">test_acc</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span>
+                <span class="n">elapsed</span> <span class="o">=</span> <span class="n">strfdelta</span><span class="p">(</span><span class="n">epoch_time</span><span class="p">,</span> <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+                <span class="n">output_policy</span><span class="o">.</span><span class="n">training_epoch_stats</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">output_policy</span><span class="o">.</span><span class="n">training_finished</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Classifier.evaluate"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">output_policy</span><span class="o">=</span><span class="n">policy</span><span class="o">.</span><span class="n">ToConsole</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;Used to evaluate the model&#39;s performance on a provided dataset.</span>
+
+<span class="sd">        :param dataset: dataset iterator used in order to evaluate a model&#39;s performance.</span>
+<span class="sd">        :type dataset: gemicai.data_iterators.GemicaiDataset</span>
+<span class="sd">        :param batch_size: number (non-negative) of DataObject which will be feed into a classifier at once</span>
+<span class="sd">        :type batch_size: int</span>
+<span class="sd">        :param num_workers: number (non-negative) of worker threads used to load data from the dataset</span>
+<span class="sd">        :type num_workers: int</span>
+<span class="sd">        :param pin_memory: whenever memory pages should be pinned or not. If set to false there is a possibility</span>
+<span class="sd">            that memory pages might be moved to a swap decreasing overall program&#39;s performance.</span>
+<span class="sd">        :type pin_memory: bool</span>
+<span class="sd">        :param verbosity:  specifies verbosity (non-negative) of training/evaluation output. 0 - no output, 1 - basic</span>
+<span class="sd">            output, 2 or more - extended output</span>
+<span class="sd">        :type verbosity: int</span>
+<span class="sd">        :param output_policy: specifies how and where to write the evaluation statistics</span>
+<span class="sd">        :type output_policy: gemicai.output_policies.OutputPolicy</span>
+<span class="sd">        :return: tuple of model&#39;s accuracy, number of total images and number of correctly classified images</span>
+<span class="sd">        :raises TypeError: if passed arguments are not of a correct type or their values are outside of valid</span>
+<span class="sd">            bounds this method will raise a TypeError exception.</span>
+<span class="sd">        :raises ValueError: thrown whenever given data iterator object returns object containing more than two entries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Classifier</span><span class="o">.</span><span class="n">validate_dataset_parameters</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+                                               <span class="n">epochs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">,</span> <span class="n">test_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span>
+                                               <span class="n">output_policy</span><span class="o">=</span><span class="n">output_policy</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dataset</span><span class="o">.</span><span class="n">can_be_parallelized</span><span class="p">():</span>
+            <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">data_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                  <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+
+        <span class="c1"># puts module in evaluation mode.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+
+        <span class="n">correct</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="n">class_correct</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="mf">0.</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">)))</span>
+        <span class="n">class_total</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="mf">0.</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">)))</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+                <span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="n">images</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span> \
+                    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">predicted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">correct</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predicted</span> <span class="o">==</span> <span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">true_label</span><span class="p">,</span> <span class="n">predicted_label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predicted</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">true_label</span> <span class="o">==</span> <span class="n">predicted_label</span><span class="p">:</span>
+                            <span class="n">class_correct</span><span class="p">[</span><span class="n">true_label</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">class_total</span><span class="p">[</span><span class="n">true_label</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">total</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbosity</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">output_policy</span><span class="o">.</span><span class="n">accuracy_summary_basic</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">output_policy</span><span class="o">.</span><span class="n">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">acc</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span></div>
+
+<div class="viewcode-block" id="Classifier.classify"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.classify">[docs]</a>    <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Takes in a tensor object and returns a list of predicted class types along with their certainties.</span>
+
+<span class="sd">        :param tensor: tensor to classify</span>
+<span class="sd">        :type tensor: torch.Tensor</span>
+<span class="sd">        :return: list of predicted classes and their certainty</span>
+<span class="sd">        :raise TypeError: raised if tensor does not have a torch.Tensor type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;tensor should be an instance of a torch.Tensor&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">size</span><span class="p">())</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">res</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">classification</span> <span class="ow">in</span> <span class="n">m</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span> <span class="n">classification</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))[:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="Classifier.save"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Saves current classifier object to the file system, it can be loaded back in using the</span>
+<span class="sd">        gemicai.Classifier.Classifier.from_file method.</span>
+
+<span class="sd">        :param file_path: a valid path to a file, it does not require a file to exist. Optionally .gemclas file</span>
+<span class="sd">            extension can be appended to a file path like so /home/test/classifier.gemclas, if the extension is not</span>
+<span class="sd">            present it will be added automatically.</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param zipped: whenever this object should be zipped or not</span>
+<span class="sd">        :type zipped: bool</span>
+<span class="sd">        :raises TypeError: file_path is not a str type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;save method expects a file_path to be an instance of string&quot;</span><span class="p">)</span>
+        <span class="n">gem</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">zipped</span><span class="o">=</span><span class="n">zipped</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.set_device"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.set_device">[docs]</a>    <span class="k">def</span> <span class="nf">set_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable_cuda</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cuda_device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used in order to select a device on which model training will be done.</span>
+
+<span class="sd">        :param enable_cuda: if set to True the training will be done on the gpu otherwise the model will be</span>
+<span class="sd">            trained on the cpu. Please note that training on a gpu is substantially faster.</span>
+<span class="sd">        :type enable_cuda: Optional[bool]</span>
+<span class="sd">        :param cuda_device: allows for selection of a particular cuda device if enable_cuda is set to True. PyTorch&#39;s</span>
+<span class="sd">            Device ids start at 0 and are incremented by one.</span>
+<span class="sd">        :type cuda_device: Optional[int]</span>
+<span class="sd">        :raise RuntimeError: raised if the cuda device was selected but its not supported by the underlying machine</span>
+<span class="sd">        :raise TypeError: raised if any of the parameters has an invalid type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enable_cuda</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;enable_cuda parameter should be a bool&quot;</span><span class="p">)</span>
+
+        <span class="c1"># select a correct cuda device</span>
+        <span class="k">if</span> <span class="n">enable_cuda</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cuda is not available on this machine&quot;</span><span class="p">)</span>
+
+            <span class="n">device_name</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span>
+            <span class="k">if</span> <span class="n">cuda_device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cuda_device</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">cuda_device</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;cuda_device parameter should be eiter set to None or be a non-negative integer&quot;</span><span class="p">)</span>
+                <span class="n">device_name</span> <span class="o">+=</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cuda_device</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.set_trainable_layers"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.set_trainable_layers">[docs]</a>    <span class="k">def</span> <span class="nf">set_trainable_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets specified layers to be either trainable or not.</span>
+
+<span class="sd">        :param layers: list of tuples specifying which layers should be trainable or not, eg. [(&#39;fc&#39;, True), ...]. Where</span>
+<span class="sd">            &#39;fc&#39; is a layer name and True specifies that it should be trainable. Note that instead of a layer</span>
+<span class="sd">            name it is possible to pass &#39;all&#39; in its place which will set every layer in the model to the</span>
+<span class="sd">            specified mode, eg. [(&#39;all&#39;, False)] makes every layer untrainable.</span>
+<span class="sd">        :type layers: list</span>
+<span class="sd">        :raises TypeError: thrown if layers parameter has a wrong type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;set_trainable_layers method expects parameter layers to be a nonempty list &quot;</span>
+                            <span class="s2">&quot;of tuples (layer_name: string, status: bool)&quot;</span><span class="p">)</span>
+        <span class="n">valid_layers</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># check whenever passed layers are valid/exist and set them if they are</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">to_set</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">layer</span><span class="p">:</span> <span class="n">layer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">layer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">layers</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_set</span><span class="p">):</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="n">to_set</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Classifier.from_file"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.from_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used to load a Classifier object from a given file</span>
+
+<span class="sd">        :param file_path: a valid path to a file up to and including it&#39;s extension type.</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param zipped: whenever given file is zipped or not</span>
+<span class="sd">        :type zipped: bool</span>
+<span class="sd">        :return: a valid Classifier object</span>
+<span class="sd">        :raises TypeError: thrown if the given path is of an invalid format</span>
+<span class="sd">        :raises Exception: thrown if Classifier object could not have been loaded in from the given file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;load_from_pickle method expects a pkl_file_path to be an instance of string&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gem</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">zipped</span><span class="o">=</span><span class="n">zipped</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.validate_dataset_parameters"><a class="viewcode-back" href="../../gemicai.html#gemicai.Classifier.Classifier.validate_dataset_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_dataset_parameters</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">,</span>
+                                    <span class="n">output_policy</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called internally in order to validate passed arguments to the train and evaluate methods.</span>
+
+<span class="sd">        :param dataset: dataset iterator used in order to train/evaluate a model</span>
+<span class="sd">        :type dataset: gemicai.data_iterators.GemicaiDataset</span>
+<span class="sd">        :param batch_size: number (non-negative) of DataObject which will be feed into a classifier at once</span>
+<span class="sd">        :type batch_size: int</span>
+<span class="sd">        :param num_workers: number (non-negative) of worker threads used to load data from the dataset</span>
+<span class="sd">        :type num_workers: int</span>
+<span class="sd">        :param pin_memory: whenever memory pages should be pinned or not. If set to false there is a possibility</span>
+<span class="sd">            that memory pages might be moved to a swap decreasing overall program&#39;s performance.</span>
+<span class="sd">        :type pin_memory: bool</span>
+<span class="sd">        :param test_dataset: optional parameter, validates whenever a test_dataset iterator passed to the train</span>
+<span class="sd">            function is a valid gemicai object</span>
+<span class="sd">        :type test_dataset: Union[None, gemicai.data_iterators.GemicaiDataset]</span>
+<span class="sd">        :param verbosity: specifies verbosity (non-negative) of training/evaluation output. 0 - no output, 1 - basic</span>
+<span class="sd">            output, 2 or more - extended output</span>
+<span class="sd">        :type verbosity: int</span>
+<span class="sd">        :param output_policy: specifies how and where to write the training/evaluation output</span>
+<span class="sd">        :type output_policy: gemicai.output_policies.OutputPolicy</span>
+<span class="sd">        :param epochs: specifies how many training iterations (non-negative) to perform. One iteration goes over a</span>
+<span class="sd">            whole dataset.</span>
+<span class="sd">        :type epochs: int</span>
+<span class="sd">        :raises TypeError: if passed arguments are not of a correct type or their values are outside of valid</span>
+<span class="sd">            bounds this method will raise a TypeError exception.</span>
+<span class="sd">        :raises ValueError: thrown whenever given data iterator object returns object containing more than two entries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">epochs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;epochs parameter should be a non-negative integer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">batch_size</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;batch_size parameter should be a non-negative integer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_workers</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">num_workers</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;num_workers parameter should be a non-negative integer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pin_memory</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="n">num_workers</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;pin_memory parameter should be a boolean&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">iterators</span><span class="o">.</span><span class="n">GemicaiDataset</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dataset parameter should have a base class of data_iterators.GemicaiDataset&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataset</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Specify what label should be classified. This dataset containts the labels </span><span class="si">{}</span><span class="s1">. E.g. try&#39;</span>
+                             <span class="s1">&#39; again with dataset[</span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1">] or dataset[0]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">,</span> <span class="n">iterators</span><span class="o">.</span><span class="n">GemicaiDataset</span><span class="p">)</span> <span class="ow">and</span> <span class="n">test_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;test_dataset parameter should have a base class of data_iterators.GemicaiDataset &quot;</span>
+                            <span class="s2">&quot;or be set to None&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbosity</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">verbosity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;verbosity parameter should be a non-negative integer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_policy</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">OutputPolicy</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;output_policy parameter should have a base class of output_policies.OutputPolicy&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

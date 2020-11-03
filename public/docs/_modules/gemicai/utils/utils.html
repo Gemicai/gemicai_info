@@ -1,0 +1,336 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.utils.utils &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.utils.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.utils.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains loosely related utility functions used by the Gemicai&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span>
+
+
+<div class="viewcode-block" id="strfdelta"><a class="viewcode-back" href="../../../gemicai.utils.html#gemicai.utils.utils.strfdelta">[docs]</a><span class="k">def</span> <span class="nf">strfdelta</span><span class="p">(</span><span class="n">tdelta</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Similar to strftime, but this one is for a datetime.timedelta object.</span>
+
+<span class="sd">    :param tdelta: datetime object containing some time difference</span>
+<span class="sd">    :type tdelta: datetime.timedelta</span>
+<span class="sd">    :param fmt: string with a format</span>
+<span class="sd">    :type fmt: str</span>
+<span class="sd">    :return: string containing a time in a given format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">DeltaTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+        <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;%&quot;</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="n">tdelta</span><span class="o">.</span><span class="n">days</span><span class="p">}</span>
+    <span class="n">hours</span><span class="p">,</span> <span class="n">rem</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">tdelta</span><span class="o">.</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
+    <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">DeltaTemplate</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="format_byte_size"><a class="viewcode-back" href="../../../gemicai.utils.html#gemicai.utils.utils.format_byte_size">[docs]</a><span class="k">def</span> <span class="nf">format_byte_size</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a given number as a formatted binary unit string</span>
+
+<span class="sd">    :param num: number to format eg. 1048576</span>
+<span class="sd">    :type num: int</span>
+<span class="sd">    :return: a binary unit formatted string eg. 10 MB</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unit_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;bytes&#39;</span><span class="p">,</span> <span class="s1">&#39;kB&#39;</span><span class="p">,</span> <span class="s1">&#39;MB&#39;</span><span class="p">,</span> <span class="s1">&#39;GB&#39;</span><span class="p">,</span> <span class="s1">&#39;TB&#39;</span><span class="p">,</span> <span class="s1">&#39;PB&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">exponent</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)),</span> <span class="nb">len</span><span class="p">(</span><span class="n">unit_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">quotient</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">**</span> <span class="n">exponent</span>
+        <span class="n">unit</span><span class="p">,</span> <span class="n">num_decimals</span> <span class="o">=</span> <span class="n">unit_list</span><span class="p">[</span><span class="n">exponent</span><span class="p">]</span>
+        <span class="n">format_string</span> <span class="o">=</span> <span class="s1">&#39;{:.</span><span class="si">%s</span><span class="s1">f} </span><span class="si">{}</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">num_decimals</span>
+        <span class="k">return</span> <span class="n">format_string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quotient</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;0 bytes&#39;</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;1 byte&#39;</span></div>
+
+
+<div class="viewcode-block" id="dir_info"><a class="viewcode-back" href="../../../gemicai.utils.html#gemicai.utils.utils.dir_info">[docs]</a><span class="k">def</span> <span class="nf">dir_info</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prints extensions, file names and sizes of all files contained inside of a specified directory.</span>
+
+<span class="sd">    :param directory: directory to iterate over</span>
+<span class="sd">    :type directory: Union[str, os.path]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> isn</span><span class="se">\&#39;</span><span class="s1">t a directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>
+    <span class="n">cnt_ext</span><span class="p">,</span> <span class="n">sum_size</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(),</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+                <span class="n">ext</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):]</span>
+                <span class="n">cnt_ext</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">ext</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+                <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">sum_size</span><span class="p">:</span>
+                    <span class="n">sum_size</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sum_size</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">sum_size</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">k</span><span class="p">,</span> <span class="n">cnt_ext</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">format_byte_size</span><span class="p">(</span><span class="n">sum_size</span><span class="p">[</span><span class="n">k</span><span class="p">])])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;TOTAL&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cnt_ext</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">format_byte_size</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">sum_size</span><span class="o">.</span><span class="n">values</span><span class="p">()))])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Extension&#39;</span><span class="p">,</span> <span class="s1">&#39;Files&#39;</span><span class="p">,</span> <span class="s1">&#39;Size&#39;</span><span class="p">],</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;orgtbl&#39;</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="table_print"><a class="viewcode-back" href="../../../gemicai.utils.html#gemicai.utils.utils.table_print">[docs]</a><span class="k">def</span> <span class="nf">table_print</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_header</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prints a row of a table using a specified template and data</span>
+
+<span class="sd">    :param template: list of strings containing a table row template</span>
+<span class="sd">    :type template: list</span>
+<span class="sd">    :param data: list of strings containing a table row data</span>
+<span class="sd">    :type data: list</span>
+<span class="sd">    :param is_header: whenever passed data should be formatted and printed as a header</span>
+<span class="sd">    :type is_header: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">template</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="s1">&#39;Template length and data length should be equal!&#39;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;| &#39;</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">d</span> <span class="o">+</span> <span class="s1">&#39; | &#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_header</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;--+&#39;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">+</span><span class="s1">&#39;|&#39;</span><span class="p">)</span></div>
+    <span class="c1"># if is_header:</span>
+    <span class="c1">#     print(tabulate([[]], headers=data, tablefmt=&#39;orgtbl&#39;))</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     print(tabulate(data, tablefmt=&#39;orgtbl&#39;))</span>
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

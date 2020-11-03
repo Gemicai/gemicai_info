@@ -1,0 +1,447 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.ClassifierTree &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.ClassifierTree</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.ClassifierTree</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">gemicai</span> <span class="k">as</span> <span class="nn">gem</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+
+<div class="viewcode-block" id="ClassifierTree"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree">[docs]</a><span class="k">class</span> <span class="nc">ClassifierTree</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_classifier</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">base_dataset</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">dataset_constraints</span><span class="o">=</span><span class="p">{},</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Retrieving ClassifierTree from a root node</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">default_classifier</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">base_dataset</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">ClassifierNode</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;root should be of type ClassifierNode&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="c1"># Initializing ClassifierTree</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;classify should be a list of attributes the tree should classify&#39;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;labels should contain at least 2 labels.&#39;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_dataset</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">GemicaiDataset</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;base_dataset should be an instance of GemicaiDataset&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_classifier</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">Classifier</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;default classifier should be a gem.Classifier&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;path should be a valid directory&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+            <span class="c1"># Set root of the tree</span>
+            <span class="n">classes</span> <span class="o">=</span> <span class="n">base_dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">dataset_constraints</span><span class="p">)</span><span class="o">.</span><span class="n">classes</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">root_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">default_classifier</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">Classifier</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">module</span><span class="p">),</span>
+                                                <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+                                                <span class="n">layer_config</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">layer_config</span><span class="p">),</span>
+                                                <span class="n">loss_function</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">loss_function</span><span class="p">),</span>
+                                                <span class="n">optimizer</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">optimizer</span><span class="p">),</span>
+                                                <span class="n">enable_cuda</span><span class="o">=</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">enable_cuda</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">ClassifierNode</span><span class="p">(</span><span class="n">default_classifier</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">root_file_path</span><span class="p">,</span> <span class="n">dataset_constraints</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="c1"># Recursively sets up the ClassifierTree</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+                <span class="c1"># Child inherits parent&#39;s dataset constraints, and gets extra constraint from its parent</span>
+                <span class="n">cons</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">dataset_constraints</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">c</span><span class="p">}</span>
+
+                <span class="c1"># If at the end of the tree, all nodes are leafs and therefore instances of ClassifierNode.</span>
+                <span class="c1"># Else not the end of the tree, which means this child must be an instance of ClassifierTree.</span>
+                <span class="n">child_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">child_dir</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">child_dir</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">child_classes</span> <span class="o">=</span> <span class="n">base_dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">cons</span><span class="p">)</span><span class="o">.</span><span class="n">classes</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">child_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">child_dir</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">default_classifier</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">Classifier</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">module</span><span class="p">),</span>
+                                                        <span class="n">classes</span><span class="o">=</span><span class="n">child_classes</span><span class="p">,</span>
+                                                        <span class="n">layer_config</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">layer_config</span><span class="p">),</span>
+                                                        <span class="n">loss_function</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">loss_function</span><span class="p">),</span>
+                                                        <span class="n">optimizer</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">optimizer</span><span class="p">),</span>
+                                                        <span class="n">enable_cuda</span><span class="o">=</span><span class="n">default_classifier</span><span class="o">.</span><span class="n">enable_cuda</span><span class="p">)</span>
+                    <span class="n">ClassifierNode</span><span class="p">(</span><span class="n">default_classifier</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">child_path</span><span class="p">,</span> <span class="n">cons</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ClassifierTree</span><span class="p">(</span><span class="n">default_classifier</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">base_dataset</span><span class="p">,</span> <span class="n">child_dir</span><span class="p">,</span> <span class="n">cons</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">dic</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.gemnode&#39;</span><span class="p">):</span>
+                    <span class="n">node</span> <span class="o">=</span> <span class="n">ClassifierNode</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span> <span class="ow">in</span> <span class="n">dic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">cnt_classifiers</span><span class="p">,</span> <span class="n">cnt_classes</span> <span class="o">=</span> <span class="n">dic</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
+                        <span class="n">dic</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">cnt_classifiers</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cnt_classes</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">dic</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">cnt_classifiers</span><span class="p">,</span> <span class="n">cnt_classes</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">labels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="n">label</span><span class="p">,</span> <span class="n">cnt_classifiers</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cnt_classes</span> <span class="o">/</span> <span class="n">cnt_classifiers</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Depth&#39;</span><span class="p">,</span> <span class="s1">&#39;Label&#39;</span><span class="p">,</span> <span class="s1">&#39;Classifiers&#39;</span><span class="p">,</span> <span class="s1">&#39;Avg. classes&#39;</span><span class="p">],</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;orgtbl&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: For gemicai version 1.0 it might be a nice idea to give ClassifierTree an iterator that iterators over</span>
+        <span class="c1">#  all nodes in the tree.</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="ClassifierTree.train"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Training of ClassifierTree </span><span class="si">{}</span><span class="s1"> begun. Total nodes to train: </span><span class="si">{}</span><span class="s1">&#39;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes_in_tree</span><span class="p">())))</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="c1"># TODO: This is not ideal and can be done better, but good enough for beta release</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:&gt;5s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;5s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:20s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;8s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;10s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;10s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:8s}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Node&#39;</span><span class="p">,</span> <span class="s1">&#39;Depth&#39;</span><span class="p">,</span> <span class="s1">&#39;Parents&#39;</span><span class="p">,</span> <span class="s1">&#39;Classes&#39;</span><span class="p">,</span> <span class="s1">&#39;Train size&#39;</span><span class="p">,</span> <span class="s1">&#39;Train acc&#39;</span><span class="p">,</span> <span class="s1">&#39;Elapsed&#39;</span><span class="p">]</span>
+        <span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">table_print</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">is_header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes_in_tree</span><span class="p">()):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">ClassifierNode</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">node_path</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">parents</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">node_path</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">acc</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">strfdelta</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parents</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>
+                <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">depth</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">parents</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">classes</span><span class="p">),</span> <span class="n">total</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">]</span>
+            <span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">table_print</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierTree.evaluate"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:&gt;5s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;5s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:20s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;8s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;10s}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:&gt;10s}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Node&#39;</span><span class="p">,</span> <span class="s1">&#39;Depth&#39;</span><span class="p">,</span> <span class="s1">&#39;Parents&#39;</span><span class="p">,</span> <span class="s1">&#39;Classes&#39;</span><span class="p">,</span> <span class="s1">&#39;Test size&#39;</span><span class="p">,</span> <span class="s1">&#39;Test acc&#39;</span><span class="p">]</span>
+        <span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">table_print</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">is_header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes_in_tree</span><span class="p">()):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">ClassifierNode</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">node_path</span><span class="p">)</span>
+            <span class="n">acc</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+            <span class="n">parents</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">node_path</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)),</span> <span class="n">parents</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">classes</span><span class="p">),</span> <span class="n">total</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;%&#39;</span><span class="p">]</span>
+            <span class="n">gem</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">table_print</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierTree.classify"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree.classify">[docs]</a>    <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+        <span class="n">predicted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">label</span><span class="p">:</span> <span class="n">predicted</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">ClassifierTree</span><span class="o">.</span><span class="n">from_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">predicted</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">label</span><span class="p">:</span> <span class="n">predicted</span><span class="p">,</span> <span class="o">**</span><span class="n">child</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">tensor</span><span class="p">)}</span></div>
+
+    <span class="c1"># Returns list of all nodes in tree</span>
+<div class="viewcode-block" id="ClassifierTree.nodes_in_tree"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree.nodes_in_tree">[docs]</a>    <span class="k">def</span> <span class="nf">nodes_in_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_nodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">file_path</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">child_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">ClassifierTree</span><span class="o">.</span><span class="n">from_dir</span><span class="p">(</span><span class="n">child_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+                <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">nodes_in_tree</span><span class="p">(</span><span class="n">_nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_nodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">nodes</span></div>
+
+    <span class="c1"># Instantiates ClassifierTree object from ClassifierNode, or ClassifierNode filepath</span>
+<div class="viewcode-block" id="ClassifierTree.from_node"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree.from_node">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">ClassifierNode</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ClassifierNode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Not a valid ClassifierNode object&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ClassifierTree</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierTree.from_dir"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierTree.from_dir">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.gemnode&#39;</span><span class="p">):</span>
+                <span class="n">tree</span> <span class="o">=</span> <span class="n">ClassifierTree</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+                <span class="n">tree</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">directory</span>
+                <span class="k">return</span> <span class="n">tree</span></div></div>
+
+
+<span class="c1"># label: this is the label the node classifies e.g. &#39;BodyPartExamined&#39;</span>
+<span class="c1"># classes: this is a list of all possible classes a label can have. e.g. [&#39;ABDOMEN&#39;,&#39;SKULL&#39;,etc.]</span>
+<div class="viewcode-block" id="ClassifierNode"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode">[docs]</a><span class="k">class</span> <span class="nc">ClassifierNode</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_classifier</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">dataset_constraints</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">default_classifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_constraints</span> <span class="o">=</span> <span class="n">dataset_constraints</span>
+
+        <span class="c1"># ClassifierNode will contain meta data about the classifier like how accurate it is. Otherwise training and</span>
+        <span class="c1"># evaluating a big ClassifierTree is going to be impossible.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="s1">&#39;77.77%&#39;</span>
+
+<div class="viewcode-block" id="ClassifierNode.train"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_constraints</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">,</span>
+                              <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierNode.evaluate"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_constraints</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
+            <span class="n">atc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="n">pin_memory</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="c1"># StopIteration will be raised if the subset contains 0 training images.</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="n">atc</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">atc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">atc</span></div>
+
+    <span class="c1"># ClassifierNode can only classify 1 tensor at a time.</span>
+<div class="viewcode-block" id="ClassifierNode.classify"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.classify">[docs]</a>    <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">tensor</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+    <span class="c1"># Return list off all immediate children</span>
+<div class="viewcode-block" id="ClassifierNode.children"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.children">[docs]</a>    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">children</span><span class="p">,</span> <span class="n">dirname</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">d</span><span class="p">)):</span>
+                <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">children</span></div>
+
+    <span class="c1"># If the node has no children its a leaf node.</span>
+<div class="viewcode-block" id="ClassifierNode.is_leaf"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.is_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+    <span class="c1"># save ClassifierNode object to .gemnode file, can be retrieved with from_file()</span>
+<div class="viewcode-block" id="ClassifierNode.save"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">file_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="n">gem</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="c1"># Loads classifier object from .gemnode file.</span>
+<div class="viewcode-block" id="ClassifierNode.from_file"><a class="viewcode-back" href="../../gemicai.html#gemicai.ClassifierTree.ClassifierNode.from_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="k">return</span> <span class="n">node</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1733 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai package &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="index.html"/>
+        <link rel="up" title="gemicai" href="modules.html"/>
+        <link rel="next" title="gemicai.io package" href="gemicai.io.html"/>
+        <link rel="prev" title="gemicai" href="modules.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">gemicai</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gemicai package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gemicai.io.html">gemicai.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gemicai.utils.html">gemicai.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.Classifier">gemicai.Classifier module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.ClassifierTree">gemicai.ClassifierTree module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.Gemicai">gemicai.Gemicai module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.classifier_functors">gemicai.classifier_functors module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.data_inspection">gemicai.data_inspection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.data_iterators">gemicai.data_iterators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.data_objects">gemicai.data_objects module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.dicom_utilities">gemicai.dicom_utilities module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.label_counters">gemicai.label_counters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai.output_policies">gemicai.output_policies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gemicai">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">gemicai</a> &raquo;</li>
+        
+      <li>gemicai package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/gemicai.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gemicai.io.html" class="btn btn-neutral float-right" title="gemicai.io package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral" title="gemicai" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gemicai-package">
+<h1>gemicai package<a class="headerlink" href="#gemicai-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gemicai.io.html">gemicai.io package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gemicai.io.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemicai.io.html#module-gemicai.io.pickle">gemicai.io.pickle module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemicai.io.html#module-gemicai.io">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gemicai.utils.html">gemicai.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gemicai.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemicai.utils.html#module-gemicai.utils.utils">gemicai.utils.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemicai.utils.html#module-gemicai.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-gemicai.Classifier">
+<span id="gemicai-classifier-module"></span><h2>gemicai.Classifier module<a class="headerlink" href="#module-gemicai.Classifier" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a Classifier class which simplifies model training and evaluation process by abstracting away
+many implementation details. As a result this module allows the user to save a lot of time by providing a default
+implementation for many of the PyTorch options.</p>
+<dl class="py class">
+<dt id="gemicai.Classifier.Classifier">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.Classifier.</code><code class="sig-name descname">Classifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em>, <em class="sig-param"><span class="n">classes</span></em>, <em class="sig-param"><span class="n">layer_config</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">loss_function</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimizer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">enable_cuda</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cuda_device</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class does all of the heavy lifting when it comes down to the model training, evaluation and tensor
+classification. During creation of this class it is possible to specify the following attributes:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<em>nn.Module</em>) – specifies a model to train, for more information about models themselves please refer
+to the <a class="reference external" href="https://pytorch.org/docs/stable/torchvision/models">https://pytorch.org/docs/stable/torchvision/models</a></p></li>
+<li><p><strong>classes</strong> (<em>list</em>) – a list of classes present in the dataset, this will be used in order to modify model’s last layer.
+For more information about how to obtain such a list please refer to the classes method of the
+gemicai.data_iterators.DicomoDataset</p></li>
+<li><p><strong>layer_config</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="#gemicai.classifier_functors.GEMICAIABCFunctor" title="gemicai.classifier_functors.GEMICAIABCFunctor"><em>gemicai.classifier_functors.GEMICAIABCFunctor</em></a><em>]</em>) – optional parameter containing a functor that can be used to modify a given model.
+For more information please refer to the gemicai.classifier_functors module</p></li>
+<li><p><strong>loss_function</strong> (<em>Optional</em><em>[</em><em>nn.Module</em><em>]</em>) – optional parameter containing a loss function used during a training.</p></li>
+<li><p><strong>optimizer</strong> (<em>Optional</em><em>[</em><em>torch.optim.Optimizer</em><em>]</em>) – optional parameter containing an optimizer used during a training.</p></li>
+<li><p><strong>enable_cuda</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – if set to True the training will be done on the gpu otherwise the model will be
+trained on the cpu. Please note that training on a gpu is substantially faster.</p></li>
+<li><p><strong>cuda_device</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – allows for selection of a particular cuda device if enable_cuda is set to True. PyTorch’s
+Device ids start at 0 and are incremented by one.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RuntimeError</strong> – raised if the cuda device was selected but its not supported by the underlying machine</p></li>
+<li><p><strong>TypeError</strong> – raised if any of the parameters is of an invalid type</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.classify">
+<code class="sig-name descname">classify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tensor</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in a tensor object and returns a list of predicted class types along with their certainties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<em>torch.Tensor</em>) – tensor to classify</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of predicted classes and their certainty</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised if tensor does not have a torch.Tensor type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">dataset</em>, <em class="sig-param">batch_size=4</em>, <em class="sig-param">num_workers=0</em>, <em class="sig-param">pin_memory=False</em>, <em class="sig-param">verbosity=0</em>, <em class="sig-param">output_policy=&lt;gemicai.output_policies.ToConsole object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to evaluate the model’s performance on a provided dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset"><em>gemicai.data_iterators.GemicaiDataset</em></a>) – dataset iterator used in order to evaluate a model’s performance.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – number (non-negative) of DataObject which will be feed into a classifier at once</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – number (non-negative) of worker threads used to load data from the dataset</p></li>
+<li><p><strong>pin_memory</strong> (<em>bool</em>) – whenever memory pages should be pinned or not. If set to false there is a possibility
+that memory pages might be moved to a swap decreasing overall program’s performance.</p></li>
+<li><p><strong>verbosity</strong> (<em>int</em>) – specifies verbosity (non-negative) of training/evaluation output. 0 - no output, 1 - basic
+output, 2 or more - extended output</p></li>
+<li><p><strong>output_policy</strong> (<a class="reference internal" href="#gemicai.output_policies.OutputPolicy" title="gemicai.output_policies.OutputPolicy"><em>gemicai.output_policies.OutputPolicy</em></a>) – specifies how and where to write the evaluation statistics</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple of model’s accuracy, number of total images and number of correctly classified images</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – if passed arguments are not of a correct type or their values are outside of valid
+bounds this method will raise a TypeError exception.</p></li>
+<li><p><strong>ValueError</strong> – thrown whenever given data iterator object returns object containing more than two entries</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.from_file">
+<em class="property">static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">zipped</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to load a Classifier object from a given file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – a valid path to a file up to and including it’s extension type.</p></li>
+<li><p><strong>zipped</strong> (<em>bool</em>) – whenever given file is zipped or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid Classifier object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – thrown if the given path is of an invalid format</p></li>
+<li><p><strong>Exception</strong> – thrown if Classifier object could not have been loaded in from the given file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">zipped</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves current classifier object to the file system, it can be loaded back in using the
+gemicai.Classifier.Classifier.from_file method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – a valid path to a file, it does not require a file to exist. Optionally .gemclas file
+extension can be appended to a file path like so /home/test/classifier.gemclas, if the extension is not
+present it will be added automatically.</p></li>
+<li><p><strong>zipped</strong> (<em>bool</em>) – whenever this object should be zipped or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – file_path is not a str type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.set_device">
+<code class="sig-name descname">set_device</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">enable_cuda</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cuda_device</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.set_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.set_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used in order to select a device on which model training will be done.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enable_cuda</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – if set to True the training will be done on the gpu otherwise the model will be
+trained on the cpu. Please note that training on a gpu is substantially faster.</p></li>
+<li><p><strong>cuda_device</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – allows for selection of a particular cuda device if enable_cuda is set to True. PyTorch’s
+Device ids start at 0 and are incremented by one.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RuntimeError</strong> – raised if the cuda device was selected but its not supported by the underlying machine</p></li>
+<li><p><strong>TypeError</strong> – raised if any of the parameters has an invalid type</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.set_trainable_layers">
+<code class="sig-name descname">set_trainable_layers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">layers</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.set_trainable_layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.set_trainable_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets specified layers to be either trainable or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>layers</strong> (<em>list</em>) – list of tuples specifying which layers should be trainable or not, eg. [(‘fc’, True), …]. Where
+‘fc’ is a layer name and True specifies that it should be trainable. Note that instead of a layer
+name it is possible to pass ‘all’ in its place which will set every layer in the model to the
+specified mode, eg. [(‘all’, False)] makes every layer untrainable.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – thrown if layers parameter has a wrong type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">dataset</em>, <em class="sig-param">batch_size=4</em>, <em class="sig-param">epochs=20</em>, <em class="sig-param">num_workers=0</em>, <em class="sig-param">pin_memory=False</em>, <em class="sig-param">verbosity=0</em>, <em class="sig-param">test_dataset=None</em>, <em class="sig-param">output_policy=&lt;gemicai.output_policies.ToConsole object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to train a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset"><em>gemicai.data_iterators.GemicaiDataset</em></a>) – dataset iterator used in order to train a model</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – number (non-negative) of DataObject which will be feed into a classifier at once</p></li>
+<li><p><strong>epochs</strong> (<em>int</em>) – specifies how many training iterations (non-negative) to perform. One iteration goes over a
+whole dataset.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – number (non-negative) of worker threads used to load data from the dataset</p></li>
+<li><p><strong>pin_memory</strong> (<em>bool</em>) – whenever memory pages should be pinned or not. If set to false there is a possibility
+that memory pages might be moved to a swap decreasing overall program’s performance.</p></li>
+<li><p><strong>verbosity</strong> (<em>int</em>) – specifies verbosity (non-negative) of training/evaluation output. 0 - no output, 1 - basic
+output, 2 or more - extended output</p></li>
+<li><p><strong>test_dataset</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset"><em>gemicai.data_iterators.GemicaiDataset</em></a><em>]</em>) – optional parameter, if a test_dataset iterator is passed and verbosity is set to at least 2
+it will be used in order to evaluate model’s performance after a training epoch.</p></li>
+<li><p><strong>output_policy</strong> (<a class="reference internal" href="#gemicai.output_policies.OutputPolicy" title="gemicai.output_policies.OutputPolicy"><em>gemicai.output_policies.OutputPolicy</em></a>) – specifies how and where to write the training statistics</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – if passed arguments are not of a correct type or their values are outside of valid
+bounds this method will raise a TypeError exception.</p></li>
+<li><p><strong>ValueError</strong> – thrown whenever given data iterator object returns object containing more than two entries</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.Classifier.Classifier.validate_dataset_parameters">
+<em class="property">static </em><code class="sig-name descname">validate_dataset_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">batch_size</span></em>, <em class="sig-param"><span class="n">num_workers</span></em>, <em class="sig-param"><span class="n">pin_memory</span></em>, <em class="sig-param"><span class="n">test_dataset</span></em>, <em class="sig-param"><span class="n">verbosity</span></em>, <em class="sig-param"><span class="n">output_policy</span></em>, <em class="sig-param"><span class="n">epochs</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Classifier.html#Classifier.validate_dataset_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Classifier.Classifier.validate_dataset_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called internally in order to validate passed arguments to the train and evaluate methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset"><em>gemicai.data_iterators.GemicaiDataset</em></a>) – dataset iterator used in order to train/evaluate a model</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – number (non-negative) of DataObject which will be feed into a classifier at once</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – number (non-negative) of worker threads used to load data from the dataset</p></li>
+<li><p><strong>pin_memory</strong> (<em>bool</em>) – whenever memory pages should be pinned or not. If set to false there is a possibility
+that memory pages might be moved to a swap decreasing overall program’s performance.</p></li>
+<li><p><strong>test_dataset</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset"><em>gemicai.data_iterators.GemicaiDataset</em></a><em>]</em>) – optional parameter, validates whenever a test_dataset iterator passed to the train
+function is a valid gemicai object</p></li>
+<li><p><strong>verbosity</strong> (<em>int</em>) – specifies verbosity (non-negative) of training/evaluation output. 0 - no output, 1 - basic
+output, 2 or more - extended output</p></li>
+<li><p><strong>output_policy</strong> (<a class="reference internal" href="#gemicai.output_policies.OutputPolicy" title="gemicai.output_policies.OutputPolicy"><em>gemicai.output_policies.OutputPolicy</em></a>) – specifies how and where to write the training/evaluation output</p></li>
+<li><p><strong>epochs</strong> (<em>int</em>) – specifies how many training iterations (non-negative) to perform. One iteration goes over a
+whole dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – if passed arguments are not of a correct type or their values are outside of valid
+bounds this method will raise a TypeError exception.</p></li>
+<li><p><strong>ValueError</strong> – thrown whenever given data iterator object returns object containing more than two entries</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.ClassifierTree">
+<span id="gemicai-classifiertree-module"></span><h2>gemicai.ClassifierTree module<a class="headerlink" href="#module-gemicai.ClassifierTree" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gemicai.ClassifierTree.ClassifierNode">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.ClassifierTree.</code><code class="sig-name descname">ClassifierNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">default_classifier</span></em>, <em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">file_path</span></em>, <em class="sig-param"><span class="n">dataset_constraints</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.children">
+<code class="sig-name descname">children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.children" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.classify">
+<code class="sig-name descname">classify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tensor</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.classify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">num_workers</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pin_memory</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.from_file">
+<em class="property">static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.is_leaf">
+<code class="sig-name descname">is_leaf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.is_leaf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.is_leaf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierNode.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">epochs</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">num_workers</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pin_memory</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierNode.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierNode.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.ClassifierTree.ClassifierTree">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.ClassifierTree.</code><code class="sig-name descname">ClassifierTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">default_classifier</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">base_dataset</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">dataset_constraints</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierTree.classify">
+<code class="sig-name descname">classify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tensor</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree.classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree.classify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierTree.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierTree.from_dir">
+<em class="property">static </em><code class="sig-name descname">from_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree.from_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree.from_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierTree.from_node">
+<em class="property">static </em><code class="sig-name descname">from_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree.from_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree.from_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierTree.nodes_in_tree">
+<code class="sig-name descname">nodes_in_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_nodes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree.nodes_in_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree.nodes_in_tree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.ClassifierTree.ClassifierTree.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">epochs</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">num_workers</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pin_memory</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/ClassifierTree.html#ClassifierTree.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.ClassifierTree.ClassifierTree.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.Gemicai">
+<span id="gemicai-gemicai-module"></span><h2>gemicai.Gemicai module<a class="headerlink" href="#module-gemicai.Gemicai" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gemicai.Gemicai.Gemicai">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.Gemicai.</code><code class="sig-name descname">Gemicai</code><a class="reference internal" href="_modules/gemicai/Gemicai.html#Gemicai"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Gemicai.Gemicai" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dl class="py method">
+<dt id="gemicai.Gemicai.Gemicai.classify">
+<em class="property">abstract </em><code class="sig-name descname">classify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dcm</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Gemicai.html#Gemicai.classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Gemicai.Gemicai.classify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.Gemicai.GemicaiZGT">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.Gemicai.</code><code class="sig-name descname">GemicaiZGT</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">classifiers_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Gemicai.html#GemicaiZGT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Gemicai.GemicaiZGT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.Gemicai.Gemicai" title="gemicai.Gemicai.Gemicai"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.Gemicai.Gemicai</span></code></a></p>
+<dl class="py method">
+<dt id="gemicai.Gemicai.GemicaiZGT.classify">
+<code class="sig-name descname">classify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dcm</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/Gemicai.html#GemicaiZGT.classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.Gemicai.GemicaiZGT.classify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.classifier_functors">
+<span id="gemicai-classifier-functors-module"></span><h2>gemicai.classifier_functors module<a class="headerlink" href="#module-gemicai.classifier_functors" title="Permalink to this headline">¶</a></h2>
+<p>This module contains functors that can be used to modify models. Object of this class can be passed as an optional
+argument to the gemicai.Classifier.Classifier constructor, see it’s layer_config parameter for more information.</p>
+<dl class="py class">
+<dt id="gemicai.classifier_functors.DefaultLastLayerConfig">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.classifier_functors.</code><code class="sig-name descname">DefaultLastLayerConfig</code><a class="reference internal" href="_modules/gemicai/classifier_functors.html#DefaultLastLayerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.classifier_functors.DefaultLastLayerConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.classifier_functors.GEMICAIABCFunctor" title="gemicai.classifier_functors.GEMICAIABCFunctor"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.classifier_functors.GEMICAIABCFunctor</span></code></a></p>
+<p>Gemicai’s default functor which modifies model’s final layer depending on the number of passed classes.
+It works with most of the torchvision models, for more information about models themselves please refer
+to the <a class="reference external" href="https://pytorch.org/docs/stable/torchvision/models">https://pytorch.org/docs/stable/torchvision/models</a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.classifier_functors.GEMICAIABCFunctor">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.classifier_functors.</code><code class="sig-name descname">GEMICAIABCFunctor</code><a class="reference internal" href="_modules/gemicai/classifier_functors.html#GEMICAIABCFunctor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.classifier_functors.GEMICAIABCFunctor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Every custom functor should extend this abstract base class.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.data_inspection">
+<span id="gemicai-data-inspection-module"></span><h2>gemicai.data_inspection module<a class="headerlink" href="#module-gemicai.data_inspection" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gemicai.data_inspection.correct_dataset">
+<code class="sig-prename descclassname">gemicai.data_inspection.</code><code class="sig-name descname">correct_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">net</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#gemicai.Classifier.Classifier" title="gemicai.Classifier.Classifier">gemicai.Classifier.Classifier</a></span></em>, <em class="sig-param"><span class="n">dataset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset">gemicai.data_iterators.GemicaiDataset</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_inspection.html#correct_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_inspection.correct_dataset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gemicai.data_inspection.generate_metadata_df">
+<code class="sig-prename descclassname">gemicai.data_inspection.</code><code class="sig-name descname">generate_metadata_df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_folder</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_inspection.html#generate_metadata_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_inspection.generate_metadata_df" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gemicai.data_inspection.generate_metadata_excel">
+<code class="sig-prename descclassname">gemicai.data_inspection.</code><code class="sig-name descname">generate_metadata_excel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_folder</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_inspection.html#generate_metadata_excel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_inspection.generate_metadata_excel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.data_iterators">
+<span id="gemicai-data-iterators-module"></span><h2>gemicai.data_iterators module<a class="headerlink" href="#module-gemicai.data_iterators" title="Permalink to this headline">¶</a></h2>
+<p>This module contains data iterators which are used in order to traverse a dataset and retrieve a relevant information
+from the DataObjects it contains.</p>
+<dl class="py class">
+<dt id="gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_iterators.</code><code class="sig-name descname">ConcurrentPickledDicomObjectTaskSplitter</code><span class="sig-paren">(</span><em class="sig-param">base_path</em>, <em class="sig-param">labels</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">constraints={}</em>, <em class="sig-param">label_counter_type=&lt;class 'gemicai.label_counters.LabelCounter'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#ConcurrentPickledDicomObjectTaskSplitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.data_iterators.DicomoDataset" title="gemicai.data_iterators.DicomoDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.data_iterators.DicomoDataset</span></code></a></p>
+<p>This class server as a proxy for the underlying iterators when the iter() method is called it returns a
+PickledDicomoFilePool object which can be iterated over, this results in a class that supports a parallel data
+loading. It’s constructor takes in the following parameters:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path</strong> (<em>str</em>) – a valid path to a folder containing a .gemset datasets</p></li>
+<li><p><strong>labels</strong> (<em>list</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>any torchvision.transforms</em><em>]</em>) – optional transforms to be applied on the tensor</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+<li><p><strong>label_counter_type</strong> (<em>gemicai.label_counter.GemicaiLabelCounter</em>) – label counter used by the summarize method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – raised if any of the parameters has an invalid type</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.can_be_parallelized">
+<code class="sig-name descname">can_be_parallelized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#ConcurrentPickledDicomObjectTaskSplitter.can_be_parallelized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.can_be_parallelized" title="Permalink to this definition">¶</a></dt>
+<dd><p>This iterator supports a parallelized resource loading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>always returns True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.plot_one_of_every">
+<code class="sig-name descname">plot_one_of_every</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'gray_r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#ConcurrentPickledDicomObjectTaskSplitter.plot_one_of_every"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.plot_one_of_every" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots one image per value type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – label according to which we will look for a unique values, eg, ‘Modality’</p></li>
+<li><p><strong>cmap</strong> (<em>str</em>) – color scheme</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – raised whenever label is not a str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.subset">
+<code class="sig-name descname">subset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#ConcurrentPickledDicomObjectTaskSplitter.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dataset subset using provided constraints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised whenever constraints parameter is not a dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.summarize">
+<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">print_summary</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#ConcurrentPickledDicomObjectTaskSplitter.summarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns or prints a summary of all the DataObject values in the dataset selected by the label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – field label which values to summarize, for example ‘BodyPartExamined’ or ‘Modality’</p></li>
+<li><p><strong>print_summary</strong> (<em>bool</em>) – whenever to print or return an instance of gemicai.label_counters.GemicaiLabelCounter
+object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if print_summary is set to false a class that extends a gemicai.label_counters.GemicaiLabelCounter</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised whenever one of the parameter has an invalid type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.data_iterators.DicomoDataset">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_iterators.</code><code class="sig-name descname">DicomoDataset</code><span class="sig-paren">(</span><em class="sig-param">label_counter_type=&lt;class 'gemicai.label_counters.LabelCounter'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.data_iterators.GemicaiDataset" title="gemicai.data_iterators.GemicaiDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.data_iterators.GemicaiDataset</span></code></a></p>
+<p>Every provided non-abstract data iterator extends this class and calls it’s __init__ method with a following
+argument:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>label_counter_type</strong> (<em>gemicai.label_counter.GemicaiLabelCounter</em>) – label counter used by the summarize method</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – raised if any of the parameters has an invalid type</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.can_be_parallelized">
+<em class="property">abstract </em><code class="sig-name descname">can_be_parallelized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.can_be_parallelized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.can_be_parallelized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return a boolean specifying whenever current iterator supports parallelized resource loading.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.classes">
+<code class="sig-name descname">classes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all of the classes in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – label to summarize on</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of possible label values present in the dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.from_directory">
+<em class="property">static </em><code class="sig-name descname">from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.from_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a data iterator from the supplied folder which should contain .gemset data sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – a valid path to an existing folder which contains .gemset datasets</p></li>
+<li><p><strong>labels</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>any torchvision.transforms</em><em>]</em>) – optional transforms to be applied on the tensor</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>NotADirectoryError</strong> – raised whenever passed folder_path is invalid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.from_file">
+<em class="property">static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a data iterator for a supplied .gemset file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – a valid path to a .gemset file</p></li>
+<li><p><strong>labels</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>any torchvision.transforms</em><em>]</em>) – optional transforms to be applied on the tensor</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid gemicai.data_iterators.PickledDicomoDataSet object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>FileNotFoundError</strong> – raised whenever file_path does not point to any valid file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.get_dicomo_dataset">
+<em class="property">static </em><code class="sig-name descname">get_dicomo_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_set_path</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.get_dicomo_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.get_dicomo_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Created a data iterator from the supplied file or folder path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_set_path</strong> – a valid path to an existing folder which contains .gemset datasets
+or a valid path to a .gemset file</p></li>
+<li><p><strong>labels</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>gemicai.data_iterators.PickledDicomoDataSet object if file path was supplied otherwise
+gemicai.data_iterators.ConcurrentPickledDicomObjectTaskSplitter object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – raised whenever file_path does not point to any valid file</p></li>
+<li><p><strong>NotADirectoryError</strong> – raised whenever passed folder_path is invalid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.plot_one_of_every">
+<code class="sig-name descname">plot_one_of_every</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'gray_r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.plot_one_of_every"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.plot_one_of_every" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots one image per value type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – label according to which we will look for a unique values, eg, ‘Modality’</p></li>
+<li><p><strong>cmap</strong> (<em>str</em>) – color scheme</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – raised whenever label is not a str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.subset">
+<em class="property">abstract </em><code class="sig-name descname">subset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return a subset of a current dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – dictionary with a dataset constraints, eg. {‘Modality’: ‘CT’}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a correct user defined iterator type which extends gemicai.data_iterators.GemicaiDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.DicomoDataset.summarize">
+<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">print_summary</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#DicomoDataset.summarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.DicomoDataset.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns or prints a summary of all the DataObject values in the dataset selected by the label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – field label which values to summarize, for example ‘BodyPartExamined’ or ‘Modality’</p></li>
+<li><p><strong>print_summary</strong> (<em>bool</em>) – whenever to print or return an instance of gemicai.label_counters.GemicaiLabelCounter
+object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if print_summary is set to false a class that extends a gemicai.label_counters.GemicaiLabelCounter</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised whenever one of the parameter has an invalid type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.data_iterators.GemicaiDataset">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_iterators.</code><code class="sig-name descname">GemicaiDataset</code><a class="reference internal" href="_modules/gemicai/data_iterators.html#GemicaiDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.GemicaiDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.IterableDataset</span></code></p>
+<p>This interface class serves as a basis for the every Gemicai’s data iterator.</p>
+<dl class="py method">
+<dt id="gemicai.data_iterators.GemicaiDataset.can_be_parallelized">
+<em class="property">abstract </em><code class="sig-name descname">can_be_parallelized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#GemicaiDataset.can_be_parallelized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.GemicaiDataset.can_be_parallelized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return a boolean specifying whenever current iterator supports parallelized resource loading.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.GemicaiDataset.classes">
+<em class="property">abstract </em><code class="sig-name descname">classes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#GemicaiDataset.classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.GemicaiDataset.classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return a list of all the classes in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – label to summarize on</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of possible label values present in the dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.GemicaiDataset.plot_one_of_every">
+<em class="property">abstract </em><code class="sig-name descname">plot_one_of_every</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'gray_r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#GemicaiDataset.plot_one_of_every"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.GemicaiDataset.plot_one_of_every" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should plot one image per class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – label according to which we will look for a unique values</p></li>
+<li><p><strong>cmap</strong> (<em>str</em>) – color scheme</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.GemicaiDataset.subset">
+<em class="property">abstract </em><code class="sig-name descname">subset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#GemicaiDataset.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.GemicaiDataset.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return a subset of a current dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – dictionary with a dataset constraints, eg. {‘Modality’: ‘CT’}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a correct user defined iterator type which extends gemicai.data_iterators.GemicaiDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.GemicaiDataset.summarize">
+<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">print_summary</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#GemicaiDataset.summarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.GemicaiDataset.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return or print a summary of all the DataObject values in the dataset selected by the label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – field label which values to summarize, for example ‘BodyPartExamined’ or ‘Modality’</p></li>
+<li><p><strong>print_summary</strong> (<em>bool</em>) – whenever to print or return an instance of gemicai.label_counters.GemicaiLabelCounter
+object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if print_summary is set to false a class that extends a gemicai.label_counters.GemicaiLabelCounter</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.data_iterators.PickledDicomoDataFolder">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_iterators.</code><code class="sig-name descname">PickledDicomoDataFolder</code><span class="sig-paren">(</span><em class="sig-param">base_path</em>, <em class="sig-param">labels</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">constraints={}</em>, <em class="sig-param">label_counter_type=&lt;class 'gemicai.label_counters.LabelCounter'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoDataFolder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoDataFolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.data_iterators.DicomoDataset" title="gemicai.data_iterators.DicomoDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.data_iterators.DicomoDataset</span></code></a></p>
+<p>This class takes in a path to a folder containing a .gemset datasets and iterates over them.
+It’s constructor takes in the following parameters:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path</strong> (<em>str</em>) – a path to a valid folder containing a .gemset datasets</p></li>
+<li><p><strong>labels</strong> (<em>list</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>any torchvision.transforms</em><em>]</em>) – optional transforms to be applied on the tensor</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+<li><p><strong>label_counter_type</strong> (<em>gemicai.label_counter.GemicaiLabelCounter</em>) – label counter used by the summarize method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – raised if any of the parameters has an invalid type</p></li>
+<li><p><strong>NotADirectoryError</strong> – raised if the passed path does not point to any directory</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gemicai.data_iterators.PickledDicomoDataFolder.can_be_parallelized">
+<code class="sig-name descname">can_be_parallelized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoDataFolder.can_be_parallelized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoDataFolder.can_be_parallelized" title="Permalink to this definition">¶</a></dt>
+<dd><p>This iterator does not support a parallelized resource loading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>always returns False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.PickledDicomoDataFolder.subset">
+<code class="sig-name descname">subset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoDataFolder.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoDataFolder.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dataset subset using provided constraints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid gemicai.data_iterators.PickledDicomoDataFolder object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised whenever constraints parameter is not a dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.data_iterators.PickledDicomoDataSet">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_iterators.</code><code class="sig-name descname">PickledDicomoDataSet</code><span class="sig-paren">(</span><em class="sig-param">pickle_path</em>, <em class="sig-param">labels=[]</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">constraints={}</em>, <em class="sig-param">label_counter_type=&lt;class 'gemicai.label_counters.LabelCounter'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoDataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoDataSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.data_iterators.DicomoDataset" title="gemicai.data_iterators.DicomoDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.data_iterators.DicomoDataset</span></code></a></p>
+<p>This class takes in a valid path to a .gemset dataset and iterates over it.
+It’s constructor takes in the following parameters:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pickle_path</strong> (<em>str</em>) – a path to a valid .gemset file</p></li>
+<li><p><strong>labels</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>any torchvision.transforms</em><em>]</em>) – optional transforms to be applied on the tensor</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+<li><p><strong>label_counter_type</strong> (<em>gemicai.label_counter.GemicaiLabelCounter</em>) – label counter used by the summarize method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – raised if any of the parameters has an invalid type</p></li>
+<li><p><strong>FileNotFoundError</strong> – raised whenever passed pickle_path does not point to any existing file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gemicai.data_iterators.PickledDicomoDataSet.can_be_parallelized">
+<code class="sig-name descname">can_be_parallelized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoDataSet.can_be_parallelized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoDataSet.can_be_parallelized" title="Permalink to this definition">¶</a></dt>
+<dd><p>This iterator does not support a parallelized resource loading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>always returns False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.PickledDicomoDataSet.subset">
+<code class="sig-name descname">subset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoDataSet.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoDataSet.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dataset subset using provided constraints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid gemicai.data_iterators.PickledDicomoDataSet object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised whenever constraints parameter is not a dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.data_iterators.PickledDicomoFilePool">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_iterators.</code><code class="sig-name descname">PickledDicomoFilePool</code><span class="sig-paren">(</span><em class="sig-param">file_pool</em>, <em class="sig-param">labels</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">constraints={}</em>, <em class="sig-param">label_counter_type=&lt;class 'gemicai.label_counters.LabelCounter'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoFilePool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoFilePool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.data_iterators.DicomoDataset" title="gemicai.data_iterators.DicomoDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.data_iterators.DicomoDataset</span></code></a></p>
+<p>This class takes in a list of files as an input and iterates over them.
+It’s constructor takes in the following parameters:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_pool</strong> (<em>list</em>) – list of a valid file paths to .gemset datasets</p></li>
+<li><p><strong>labels</strong> (<em>list</em>) – labels specifying which DataObject values except for a tensor will be returned by the next() call</p></li>
+<li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>any torchvision.transforms</em><em>]</em>) – optional transforms to be applied on the tensor</p></li>
+<li><p><strong>constraints</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p></li>
+<li><p><strong>label_counter_type</strong> (<em>gemicai.label_counter.GemicaiLabelCounter</em>) – label counter used by the summarize method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – raised if any of the parameters has an invalid type</p></li>
+<li><p><strong>FileNotFoundError</strong> – raised if some path in the file_pool does not point to any existing file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gemicai.data_iterators.PickledDicomoFilePool.can_be_parallelized">
+<code class="sig-name descname">can_be_parallelized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoFilePool.can_be_parallelized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoFilePool.can_be_parallelized" title="Permalink to this definition">¶</a></dt>
+<dd><p>This iterator does not support a parallelized resource loading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>always returns False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_iterators.PickledDicomoFilePool.subset">
+<code class="sig-name descname">subset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_iterators.html#PickledDicomoFilePool.subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_iterators.PickledDicomoFilePool.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dataset subset using provided constraints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – optional constraints that the DataObject has to fulfil in order to be returned by the
+next() call, eg. {‘Modality’: ‘CT’} or {‘Modality’: [‘CT’, ‘MG’]}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a valid gemicai.data_iterators.PickledDicomoFilePool object</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised whenever constraints parameter is not a dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.data_objects">
+<span id="gemicai-data-objects-module"></span><h2>gemicai.data_objects module<a class="headerlink" href="#module-gemicai.data_objects" title="Permalink to this headline">¶</a></h2>
+<p>This module contains data objects used by the Gemicai’s iterators</p>
+<dl class="py class">
+<dt id="gemicai.data_objects.DataObject">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_objects.</code><code class="sig-name descname">DataObject</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tensor</span></em>, <em class="sig-param"><span class="n">label_values</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DataObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DataObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Every custom data object should extend this abstract base class and call it’s constructor.</p>
+<dl class="py method">
+<dt id="gemicai.data_objects.DataObject.from_file">
+<em class="property">abstract static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DataObject.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DataObject.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should create and return a DataObject instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>Union</em><em>[</em><em>os.path</em><em>, </em><em>str</em><em>]</em>) – path to a valid file name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_objects.DataObject.plot">
+<em class="property">abstract </em><code class="sig-name descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DataObject.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DataObject.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call to this method should plot DataObject’s tensor to the screen.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.data_objects.DicomObject">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.data_objects.</code><code class="sig-name descname">DicomObject</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tensor</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">label_values</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DicomObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DicomObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.data_objects.DataObject" title="gemicai.data_objects.DataObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.data_objects.DataObject</span></code></a></p>
+<p>Gemicai’s default data object</p>
+<dl class="py method">
+<dt id="gemicai.data_objects.DicomObject.from_file">
+<em class="property">static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">tensor_size</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DicomObject.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DicomObject.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a DicomoObject from a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>Union</em><em>[</em><em>os.path</em><em>, </em><em>str</em><em>]</em>) – a valid dicom file path</p></li>
+<li><p><strong>labels</strong> (<em>list</em>) – labels which values will be taken from the Dicom object. The pixel_array field should not be
+specified as it is one of the default fields fetched internally.</p></li>
+<li><p><strong>tensor_size</strong> (<em>Optional</em><em>[</em><em>tuple</em><em>]</em>) – used to resize a tensor. If left unspecified it will try to use the current image size
+otherwise it will use the specified values. Correct format ((int)x, (int)y)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DicomoObject instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_objects.DicomObject.get_value_of">
+<code class="sig-name descname">get_value_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DicomObject.get_value_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DicomObject.get_value_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a label value of a given label type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – string with a objects label</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>value of a label or None if the object does not contain it</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_objects.DicomObject.meets_constraints">
+<code class="sig-name descname">meets_constraints</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DicomObject.meets_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DicomObject.meets_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whenever the object meets a certain type of criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>dict</em>) – constraints to check against eg. {‘Modality’: ‘CT’}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the object meets criteria, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.data_objects.DicomObject.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'gray'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/data_objects.html#DicomObject.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.data_objects.DicomObject.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints labels and plots the tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cmap</strong> (<em>str</em>) – color scheme</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.dicom_utilities">
+<span id="gemicai-dicom-utilities-module"></span><h2>gemicai.dicom_utilities module<a class="headerlink" href="#module-gemicai.dicom_utilities" title="Permalink to this headline">¶</a></h2>
+<p>This module contains some utility functions that are used by the Gemicai in order to interface with dicom objects</p>
+<dl class="py function">
+<dt id="gemicai.dicom_utilities.dicom_to_gemset">
+<code class="sig-prename descclassname">gemicai.dicom_utilities.</code><code class="sig-name descname">dicom_to_gemset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_origin</span></em>, <em class="sig-param"><span class="n">data_destination</span></em>, <em class="sig-param"><span class="n">relevant_labels</span></em>, <em class="sig-param"><span class="n">field_values</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">objects_per_file</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">pick_middle</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/dicom_utilities.html#dicom_to_gemset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.dicom_utilities.dicom_to_gemset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Gemicai dataset from the data_origin (it should contain a valid dicom objects) and puts them in the
+data_destination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_origin</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>io.path</em><em>]</em>) – path to a folder containing dicom files</p></li>
+<li><p><strong>data_destination</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>io.path</em><em>]</em>) – path to a destination where the gemsets will be outputted</p></li>
+<li><p><strong>relevant_labels</strong> (<em>list</em>) – specify which labels along with their values to extract from the dicom file and put into
+gemicai.data_objects.DicomObject, eg. [‘Modality’] in this case DicomObject will contain a tensor and its
+Modality</p></li>
+<li><p><strong>field_values</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em>) – dataset will contain only objects which fulfil specified critieria,
+eg. [(‘Modality’, [‘CT’, ‘MG’]), …] in this case dataset will contain only objects whose Modality is set to
+CT or MG</p></li>
+<li><p><strong>objects_per_file</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – specifies how many objects one gemicai dataset should contain. A default value is 1000</p></li>
+<li><p><strong>pick_middle</strong> (<em>bool</em>) – specifies whenever instead of taking all images from the series only the middle one is taken.
+This can be useful if someone is dealing with series spanning a multiple of dicom objects.</p></li>
+<li><p><strong>verbosity</strong> (<em>int</em>) – optional non-negative parameter, if set to one it will output how long it took to process all of
+the data from data_origin</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotADirectoryError</strong> – raised if data_origin or data_destination does not point to an existing directory</p></li>
+<li><p><strong>TypeError</strong> – raised if any of the parameters has a wrong type or its value is out of the accepted bounds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gemicai.dicom_utilities.extract_tensor">
+<code class="sig-prename descclassname">gemicai.dicom_utilities.</code><code class="sig-name descname">extract_tensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ds</span><span class="p">:</span> <span class="n">pydicom.dataset.Dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/dicom_utilities.html#extract_tensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.dicom_utilities.extract_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts an image from the dicom file and creates a tensor out of it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ds</strong> (<em>pydicom.dataset.FileDataset</em>) – dicom object to extract an image from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gemicai.dicom_utilities.load_dicom">
+<code class="sig-prename descclassname">gemicai.dicom_utilities.</code><code class="sig-name descname">load_dicom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/dicom_utilities.html#load_dicom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.dicom_utilities.load_dicom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads in a given dicom file using a pydicom library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>os.path</em><em>]</em>) – a path to the .dcm.gz or .dcm file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pydicom.dataset.FileDataset or pydicom.dicomdir.DicomDir</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – raised if the file extension does not end with .dcm nor .gz</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gemicai.dicom_utilities.plot_dicom_file">
+<code class="sig-prename descclassname">gemicai.dicom_utilities.</code><code class="sig-name descname">plot_dicom_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dcm</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'gray'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/dicom_utilities.html#plot_dicom_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.dicom_utilities.plot_dicom_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots image stored in a given dicom file. If a path given instead it will try to load a specified file first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dcm</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>pydicom.dataset.FileDataset</em><em>]</em>) – dicom object or a valid path to a dicom file</p></li>
+<li><p><strong>cmap</strong> (<em>str</em>) – color scheme</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.label_counters">
+<span id="gemicai-label-counters-module"></span><h2>gemicai.label_counters module<a class="headerlink" href="#module-gemicai.label_counters" title="Permalink to this headline">¶</a></h2>
+<p>This module contains label counters which are used by the data iterators in order to count distinct data
+classes present in the dataset</p>
+<dl class="py class">
+<dt id="gemicai.label_counters.GemicaiLabelCounter">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.label_counters.</code><code class="sig-name descname">GemicaiLabelCounter</code><a class="reference internal" href="_modules/gemicai/label_counters.html#GemicaiLabelCounter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.label_counters.GemicaiLabelCounter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Every custom label counter should extend this abstract base class</p>
+<dl class="py method">
+<dt id="gemicai.label_counters.GemicaiLabelCounter.update">
+<em class="property">abstract </em><code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">labels</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/label_counters.html#GemicaiLabelCounter.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.label_counters.GemicaiLabelCounter.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called whenever we have to count number of unique classes in a given input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>labels</strong> (<em>any</em>) – in case of a user defined label counter it has to hold values to check against</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.label_counters.LabelCounter">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.label_counters.</code><code class="sig-name descname">LabelCounter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/label_counters.html#LabelCounter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.label_counters.LabelCounter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.label_counters.GemicaiLabelCounter" title="gemicai.label_counters.GemicaiLabelCounter"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.label_counters.GemicaiLabelCounter</span></code></a></p>
+<p>Gemicai’s default label counter implementation</p>
+<dl class="py method">
+<dt id="gemicai.label_counters.LabelCounter.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">labels</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/label_counters.html#LabelCounter.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.label_counters.LabelCounter.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function checks if a given input is in it’s internal mapping if not it is added to it and it’s counter
+is set to one, otherwise if it is already present then the counter is incremented by one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>labels</strong> (<em>Union</em><em>[</em><em>list</em><em>, </em><em>str</em><em>, </em><em>pydicom.valuerep.IS</em><em>]</em>) – contains labels to count</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai.output_policies">
+<span id="gemicai-output-policies-module"></span><h2>gemicai.output_policies module<a class="headerlink" href="#module-gemicai.output_policies" title="Permalink to this headline">¶</a></h2>
+<p>This module contains output policies. Such policy can be supplied as an optional parameter during model
+training or evaluation in order to log, save, or print statistics related to the model’s performance.</p>
+<dl class="py class">
+<dt id="gemicai.output_policies.OutputPolicy">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.output_policies.</code><code class="sig-name descname">OutputPolicy</code><a class="reference internal" href="_modules/gemicai/output_policies.html#OutputPolicy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.OutputPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Every custom policy should extend this abstract base class.</p>
+<dl class="py method">
+<dt id="gemicai.output_policies.OutputPolicy.accuracy_summary_basic">
+<em class="property">abstract </em><code class="sig-name descname">accuracy_summary_basic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">correct</span></em>, <em class="sig-param"><span class="n">acc</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#OutputPolicy.accuracy_summary_basic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.OutputPolicy.accuracy_summary_basic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called after a model evaluation finishes if verbosity is set to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total</strong> (<em>int</em>) – number of total objects model was evaluated on</p></li>
+<li><p><strong>correct</strong> (<em>int</em>) – number of correctly classified objects</p></li>
+<li><p><strong>acc</strong> (<em>float</em>) – overall accuracy of the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.OutputPolicy.accuracy_summary_extended">
+<em class="property">abstract </em><code class="sig-name descname">accuracy_summary_extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">classes</span></em>, <em class="sig-param"><span class="n">class_total</span></em>, <em class="sig-param"><span class="n">class_correct</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#OutputPolicy.accuracy_summary_extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.OutputPolicy.accuracy_summary_extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called after a model evaluation finishes if verbosity is equal or greater than 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classes</strong> (<em>list</em>) – list with class names on which model was evaluated</p></li>
+<li><p><strong>class_total</strong> (<em>list</em>) – list with a number of classes on which model was evaluated</p></li>
+<li><p><strong>class_correct</strong> (<em>list</em>) – list with a number of properly classified classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.OutputPolicy.training_epoch_stats">
+<em class="property">abstract </em><code class="sig-name descname">training_epoch_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">epoch</span></em>, <em class="sig-param"><span class="n">running_loss</span></em>, <em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">train_acc</span></em>, <em class="sig-param"><span class="n">test_acc</span></em>, <em class="sig-param"><span class="n">elapsed</span></em>, <em class="sig-param"><span class="n">eta</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#OutputPolicy.training_epoch_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.OutputPolicy.training_epoch_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called every time an epoch ends, all of the important training statistics are taken as
+an input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<em>int</em>) – current training epoch epoch</p></li>
+<li><p><strong>running_loss</strong> (<em>float</em>) – current total running loss of the model</p></li>
+<li><p><strong>total</strong> (<em>int</em>) – number of the images that model has trained on</p></li>
+<li><p><strong>train_acc</strong> (<em>str</em>) – models accuracy on the provided train dataset</p></li>
+<li><p><strong>test_acc</strong> (<em>str</em>) – models accuracy on the optionally provided eval dataset</p></li>
+<li><p><strong>elapsed</strong> (<em>str</em>) – total time it took to run the epoch</p></li>
+<li><p><strong>eta</strong> (<em>str</em>) – an estimated time when training will end</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.OutputPolicy.training_finished">
+<em class="property">abstract </em><code class="sig-name descname">training_finished</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">now</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#OutputPolicy.training_finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.OutputPolicy.training_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called once when training has finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>datetime.datetime</em>) – time when the training has started</p></li>
+<li><p><strong>now</strong> (<em>datetime.datetime</em>) – current time</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.OutputPolicy.training_header">
+<em class="property">abstract </em><code class="sig-name descname">training_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#OutputPolicy.training_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.OutputPolicy.training_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class implementing this method should make sure to specify how to handle a training header call.
+This call happens once before training. It’s purpose is to beautify training_epoch_stats output by providing
+some context into what categories of data the user is looking at.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.output_policies.ToConsole">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.output_policies.</code><code class="sig-name descname">ToConsole</code><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.output_policies.OutputPolicy" title="gemicai.output_policies.OutputPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.output_policies.OutputPolicy</span></code></a></p>
+<p>This policy allows to output training statistics to the console</p>
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsole.accuracy_summary_basic">
+<code class="sig-name descname">accuracy_summary_basic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">correct</span></em>, <em class="sig-param"><span class="n">acc</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsole.accuracy_summary_basic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsole.accuracy_summary_basic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs model evaluation statistics to the console if verbosity is set to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total</strong> (<em>int</em>) – number of total objects model was evaluated on</p></li>
+<li><p><strong>correct</strong> (<em>int</em>) – number of correctly classified objects</p></li>
+<li><p><strong>acc</strong> (<em>float</em>) – overall accuracy of the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsole.accuracy_summary_extended">
+<code class="sig-name descname">accuracy_summary_extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">classes</span></em>, <em class="sig-param"><span class="n">class_total</span></em>, <em class="sig-param"><span class="n">class_correct</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsole.accuracy_summary_extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsole.accuracy_summary_extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs model evaluation statistics to the console if  verbosity is equal or greater than 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classes</strong> (<em>list</em>) – list with class names on which model was evaluated</p></li>
+<li><p><strong>class_total</strong> (<em>list</em>) – list with a number of classes on which model was evaluated</p></li>
+<li><p><strong>class_correct</strong> (<em>list</em>) – list with a number of properly classified classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsole.training_epoch_stats">
+<code class="sig-name descname">training_epoch_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">epoch</span></em>, <em class="sig-param"><span class="n">running_loss</span></em>, <em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">train_acc</span></em>, <em class="sig-param"><span class="n">test_acc</span></em>, <em class="sig-param"><span class="n">elapsed</span></em>, <em class="sig-param"><span class="n">eta</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsole.training_epoch_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsole.training_epoch_stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function is called every time an epoch ends, all of the important training statistics are taken as</dt><dd><p>an input and outputted to the console.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<em>int</em>) – current training epoch epoch</p></li>
+<li><p><strong>running_loss</strong> (<em>float</em>) – current total running loss of the model</p></li>
+<li><p><strong>total</strong> (<em>int</em>) – number of the images that model has trained on</p></li>
+<li><p><strong>train_acc</strong> (<em>str</em>) – models accuracy on the provided train dataset</p></li>
+<li><p><strong>test_acc</strong> (<em>str</em>) – models accuracy on the optionally provided eval dataset</p></li>
+<li><p><strong>elapsed</strong> (<em>str</em>) – total time it took to run the epoch</p></li>
+<li><p><strong>eta</strong> (<em>str</em>) – an estimated time when training will end</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsole.training_finished">
+<code class="sig-name descname">training_finished</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">now</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsole.training_finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsole.training_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs elapsed training time to the console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>datetime.datetime</em>) – time when the training has started</p></li>
+<li><p><strong>now</strong> (<em>datetime.datetime</em>) – current time</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsole.training_header">
+<code class="sig-name descname">training_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsole.training_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsole.training_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a training header to the console</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.output_policies.ToConsoleAndExcelFile">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.output_policies.</code><code class="sig-name descname">ToConsoleAndExcelFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em>, <em class="sig-param"><span class="n">override_content</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsoleAndExcelFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsoleAndExcelFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.output_policies.ToConsole" title="gemicai.output_policies.ToConsole"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.output_policies.ToConsole</span></code></a>, <a class="reference internal" href="#gemicai.output_policies.ToExcelFile" title="gemicai.output_policies.ToExcelFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.output_policies.ToExcelFile</span></code></a></p>
+<p>This output policy is a composition of ToConsole and ToExcelFile policies.</p>
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsoleAndExcelFile.accuracy_summary_basic">
+<code class="sig-name descname">accuracy_summary_basic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">correct</span></em>, <em class="sig-param"><span class="n">acc</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsoleAndExcelFile.accuracy_summary_basic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsoleAndExcelFile.accuracy_summary_basic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called after a model evaluation finishes if verbosity is set to 1. Outputs the training statistics to
+the console and to the specified excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total</strong> (<em>int</em>) – number of total objects model was evaluated on</p></li>
+<li><p><strong>correct</strong> (<em>int</em>) – number of correctly classified objects</p></li>
+<li><p><strong>acc</strong> (<em>float</em>) – overall accuracy of the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsoleAndExcelFile.accuracy_summary_extended">
+<code class="sig-name descname">accuracy_summary_extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">classes</span></em>, <em class="sig-param"><span class="n">class_total</span></em>, <em class="sig-param"><span class="n">class_correct</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsoleAndExcelFile.accuracy_summary_extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsoleAndExcelFile.accuracy_summary_extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called after a model evaluation finishes if verbosity is equal or greater than 2. Outputs the training
+statistics to the console and to the specified excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classes</strong> (<em>list</em>) – list with class names on which model was evaluated</p></li>
+<li><p><strong>class_total</strong> (<em>list</em>) – list with a number of classes on which model was evaluated</p></li>
+<li><p><strong>class_correct</strong> (<em>list</em>) – list with a number of properly classified classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsoleAndExcelFile.training_epoch_stats">
+<code class="sig-name descname">training_epoch_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">epoch</span></em>, <em class="sig-param"><span class="n">running_loss</span></em>, <em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">train_acc</span></em>, <em class="sig-param"><span class="n">test_acc</span></em>, <em class="sig-param"><span class="n">elapsed</span></em>, <em class="sig-param"><span class="n">eta</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsoleAndExcelFile.training_epoch_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsoleAndExcelFile.training_epoch_stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function is called every time an epoch ends, all of the important training statistics are taken</dt><dd><p>as an input and outputs them to the console and the specified excel file.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<em>int</em>) – current training epoch epoch</p></li>
+<li><p><strong>running_loss</strong> (<em>float</em>) – current total running loss of the model</p></li>
+<li><p><strong>total</strong> (<em>int</em>) – number of the images that model has trained on</p></li>
+<li><p><strong>train_acc</strong> (<em>str</em>) – models accuracy on the provided train dataset</p></li>
+<li><p><strong>test_acc</strong> (<em>str</em>) – models accuracy on the optionally provided eval dataset</p></li>
+<li><p><strong>elapsed</strong> (<em>str</em>) – total time it took to run the epoch</p></li>
+<li><p><strong>eta</strong> (<em>str</em>) – an estimated time when training will end</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsoleAndExcelFile.training_finished">
+<code class="sig-name descname">training_finished</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">now</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsoleAndExcelFile.training_finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsoleAndExcelFile.training_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called once when training has finished. Outputs elapsed time to the console and the specified excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>datetime.datetime</em>) – time when the training has started</p></li>
+<li><p><strong>now</strong> (<em>datetime.datetime</em>) – current time</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToConsoleAndExcelFile.training_header">
+<code class="sig-name descname">training_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToConsoleAndExcelFile.training_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToConsoleAndExcelFile.training_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs training header to the console and the specified excel file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gemicai.output_policies.ToExcelFile">
+<em class="property">class </em><code class="sig-prename descclassname">gemicai.output_policies.</code><code class="sig-name descname">ToExcelFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em>, <em class="sig-param"><span class="n">override_content</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gemicai.output_policies.OutputPolicy" title="gemicai.output_policies.OutputPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">gemicai.output_policies.OutputPolicy</span></code></a></p>
+<p>This policy allows to output training statistics to the excel file</p>
+<dl class="py method">
+<dt id="gemicai.output_policies.ToExcelFile.accuracy_summary_basic">
+<code class="sig-name descname">accuracy_summary_basic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">correct</span></em>, <em class="sig-param"><span class="n">acc</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile.accuracy_summary_basic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile.accuracy_summary_basic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called after a model evaluation finishes if verbosity is set to 1. Outputs a training statistics to the
+specified excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total</strong> (<em>int</em>) – number of total objects model was evaluated on</p></li>
+<li><p><strong>correct</strong> (<em>int</em>) – number of correctly classified objects</p></li>
+<li><p><strong>acc</strong> (<em>float</em>) – overall accuracy of the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToExcelFile.accuracy_summary_extended">
+<code class="sig-name descname">accuracy_summary_extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">classes</span></em>, <em class="sig-param"><span class="n">class_total</span></em>, <em class="sig-param"><span class="n">class_correct</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile.accuracy_summary_extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile.accuracy_summary_extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called after a model evaluation finishes if verbosity is equal or greater than 2.
+Outputs a training statistics to the specified excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classes</strong> (<em>list</em>) – list with class names on which model was evaluated</p></li>
+<li><p><strong>class_total</strong> (<em>list</em>) – list with a number of classes on which model was evaluated</p></li>
+<li><p><strong>class_correct</strong> (<em>list</em>) – list with a number of properly classified classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToExcelFile.print_row">
+<code class="sig-name descname">print_row</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_list</span></em>, <em class="sig-param"><span class="n">cells</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile.print_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile.print_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function writes each entry from data_list into a separate cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_list</strong> (<em>list</em>) – list with data to be written</p></li>
+<li><p><strong>cells</strong> (<em>list</em>) – list with column names. Should have at least as many entries as data_list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToExcelFile.training_epoch_stats">
+<code class="sig-name descname">training_epoch_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">epoch</span></em>, <em class="sig-param"><span class="n">running_loss</span></em>, <em class="sig-param"><span class="n">total</span></em>, <em class="sig-param"><span class="n">train_acc</span></em>, <em class="sig-param"><span class="n">test_acc</span></em>, <em class="sig-param"><span class="n">elapsed</span></em>, <em class="sig-param"><span class="n">eta</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile.training_epoch_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile.training_epoch_stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function is called every time an epoch ends, all of the important training statistics are taken as</dt><dd><p>an input and outputted to the specified excel file.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<em>int</em>) – current training epoch epoch</p></li>
+<li><p><strong>running_loss</strong> (<em>float</em>) – current total running loss of the model</p></li>
+<li><p><strong>total</strong> (<em>int</em>) – number of the images that model has trained on</p></li>
+<li><p><strong>train_acc</strong> (<em>str</em>) – models accuracy on the provided train dataset</p></li>
+<li><p><strong>test_acc</strong> (<em>str</em>) – models accuracy on the optionally provided eval dataset</p></li>
+<li><p><strong>elapsed</strong> (<em>str</em>) – total time it took to run the epoch</p></li>
+<li><p><strong>eta</strong> (<em>str</em>) – an estimated time when training will end</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToExcelFile.training_finished">
+<code class="sig-name descname">training_finished</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">now</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile.training_finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile.training_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called once when training has finished, it outputs the elapsed time to the specified excel file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>datetime.datetime</em>) – time when the training has started</p></li>
+<li><p><strong>now</strong> (<em>datetime.datetime</em>) – current time</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gemicai.output_policies.ToExcelFile.training_header">
+<code class="sig-name descname">training_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gemicai/output_policies.html#ToExcelFile.training_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gemicai.output_policies.ToExcelFile.training_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs a training header to the excel file</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gemicai">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gemicai" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gemicai.io.html" class="btn btn-neutral float-right" title="gemicai.io package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral" title="gemicai" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

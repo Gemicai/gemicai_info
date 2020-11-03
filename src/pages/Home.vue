@@ -49,7 +49,7 @@
       <div class="column justify-center">
         <h5 class="text-center">Check out some of the links below to get started!</h5>
         <div class="col-xs-12 col-sm-11 col-md-10 col-lg-8 col-xl-7 row justify-center">
-          <q-btn size="xl" class="q-ma-sm" color="primary" to="/docs">
+          <q-btn size="xl" class="q-ma-sm" color="primary" to="/documentation">
             <template slot="default">
               <div class="row justify-start items-center q-pl-lg lt-sm" style="width: 300px;">
                 <q-icon name="fas fa-book" class="q-ml-xs q-mr-md q-mt-md q-mb-md" size="40px" />

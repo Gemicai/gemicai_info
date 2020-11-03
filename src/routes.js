@@ -10,32 +10,38 @@ const routes = [
     {
         path: "/",
         name: "home",
-        component: Home
+        component: Home,
+        meta: {title: "GeMICAI"}
     },
 	{
-        path: "/docs",
-        name: "docs",
-        component: Documentation
+        path: "/documentation",
+        name: "documentation",
+        component: Documentation,
+        meta: {title: "Documentation | GeMICAI"}
     },
 	{
         path: "/tutorials",
         name: "tutorials",
-        component: Tutorials
+        component: Tutorials,
+        meta: {title: "Tutorials | GeMICAI"}
     },
 	{
         path: "/tutorials/:id",
         name: "tutorial",
-        component: Tutorial
+        component: Tutorial,
+        meta: {title: "Tutorials | GeMICAI"}
     },
 	{
         path: "/research",
         name: "research",
-        component: Research
+        component: Research,
+        meta: {title: "Research | GeMICAI"}
     },
 	{
         path: "/about-us",
         name: "about-us",
-        component: AboutUs
+        component: AboutUs,
+        meta: {title: "About Us | GeMICAI"}
     },
     {
         path: '*',
