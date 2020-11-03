@@ -5,7 +5,7 @@
 
         <!-- Mobile view toolbars -->
         <q-toolbar class="bg-white lt-md">
-          <q-btn v-if="onTutorialPage()" dense flat round icon="fas fa-bars" size="xl" @click="left = !left"/>
+          <q-btn v-if="onTutorialPage() || onResearchPage()" dense flat round icon="fas fa-bars" size="xl" @click="left = !left"/>
           <q-toolbar-title class="flex items-center justify-center">
             <router-link to="/">
               <img class="headerImage" alt="" src="./assets/gemicai_logo.png" style="max-height: 80px;">
@@ -59,6 +59,21 @@
         </q-list>
       </q-drawer>
 
+      <q-drawer v-if="onResearchPage()" show-if-above v-model="left" side="left" bordered>
+        <q-list separator>
+          <div>
+            <q-item clickable v-ripple to="#Further-Research">
+              <q-item-section>Further Research</q-item-section>
+            </q-item>
+          </div>
+          <div v-for="proposal of proposals" :key="proposal.name">
+            <q-item clickable v-ripple :to="'#' + proposal.anchor" :inset-level=0.25>
+              <q-item-section>{{ proposal.name }}</q-item-section>
+            </q-item>
+          </div>
+        </q-list>
+      </q-drawer>
+
       <q-page-container>
         <router-view/>
       </q-page-container>
@@ -68,6 +83,7 @@
 
 <script>
 import tutorials from "./tutorials/tutorials";
+import proposals from './proposals';
 
 export default {
   name: 'App',
@@ -75,6 +91,7 @@ export default {
     return {
       left: false,
       tutorials: tutorials,
+      proposals: proposals,
     }
   },
   computed: {
@@ -89,6 +106,9 @@ export default {
   methods: {
     onTutorialPage() {
       return this.$route.name === 'tutorials' || this.$route.name === "tutorial"
+    },
+    onResearchPage() {
+      return this.$route.name === 'research'
     },
     isCurrent(id) {
       return this.currentId === id
