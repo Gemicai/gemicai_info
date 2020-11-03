@@ -35,7 +35,7 @@
           <q-btn class="q-pl-md q-pr-md" to="/tutorials" label="Tutorials" size="lg" no-caps stretch flat clickable :class="this.$route.name === 'tutorials' || this.$route.name === 'tutorial' ? 'bg-accent text-white' : 'bg-white text-black'" />
           <q-btn class="q-pl-md q-pr-md" to="/research" label="Research" size="lg" no-caps stretch flat clickable :class="this.$route.name === 'research' ? 'bg-accent text-white' : 'bg-white text-black'" />
           <q-btn class="q-pl-md q-pr-md" to="/about-us" label="About Us" size="lg" no-caps stretch flat clickable :class="this.$route.name === 'about-us' ? 'bg-accent text-white' : 'bg-white text-black'" />
-          <q-btn class="q-pl-md q-pr-md" type="a" href="https://github.com/Gemicai/" target="_blank" label="GitHub" size="lg" no-caps stretch flat icon-right="fab fa-github" />
+          <q-btn class="q-pl-md q-pr-md" type="a" href="https://github.com/Gemicai/Gemicai/" target="_blank" label="GitHub" size="lg" no-caps stretch flat icon-right="fab fa-github" />
 
         </q-toolbar>
       </q-header>
@@ -94,7 +94,7 @@ export default {
       return this.currentId === id
     },
     openGitHub() {
-      window.open("https://github.com/Gemicai", "_blank")
+      window.open("https://github.com/Gemicai/Gemicai", "_blank")
     }
   }
 }
