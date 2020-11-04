@@ -6,11 +6,13 @@ cache: npm
 
 script: npm run build
 
+before_deploy:
+  - zip -r gemicai-info_${TRAVIS_TAG}.zip dist
+
 deploy:
   provider: releases
   api_key: $GH_TOKEN
-  file_glob: true
-  file: "dist/*"
+  file: "gemicai-info_${TRAVIS_TAG}.zip"
   skip_cleanup: true
   on:
     tags: true
