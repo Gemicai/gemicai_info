@@ -1,4 +1,6 @@
-# mockup
+# Gemicai Info-site
+
+This is a static information site for Gemicai, hosted on https://gemic.ai/
 
 ## Project setup
 ```
@@ -19,6 +21,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
