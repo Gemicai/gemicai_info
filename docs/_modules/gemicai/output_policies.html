@@ -1,0 +1,619 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.output_policies &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.output_policies</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.output_policies</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains output policies. Such policy can be supplied as an optional parameter during model</span>
+<span class="sd">training or evaluation in order to log, save, or print statistics related to the model&#39;s performance.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">import</span> <span class="nn">openpyxl</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="OutputPolicy"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.OutputPolicy">[docs]</a><span class="k">class</span> <span class="nc">OutputPolicy</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Every custom policy should extend this abstract base class.&quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Executed when the class is created, can be useful if some special instantiation is needed.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Executed when the class goes out of scope, can be useful if some special cleanup is needed.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="OutputPolicy.training_header"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.OutputPolicy.training_header">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">training_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class implementing this method should make sure to specify how to handle a training header call.</span>
+<span class="sd">        This call happens once before training. It&#39;s purpose is to beautify training_epoch_stats output by providing</span>
+<span class="sd">        some context into what categories of data the user is looking at.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="OutputPolicy.training_epoch_stats"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.OutputPolicy.training_epoch_stats">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">training_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function is called every time an epoch ends, all of the important training statistics are taken as</span>
+<span class="sd">        an input.</span>
+
+<span class="sd">        :param epoch: current training epoch epoch</span>
+<span class="sd">        :type epoch: int</span>
+<span class="sd">        :param running_loss: current total running loss of the model</span>
+<span class="sd">        :type running_loss: float</span>
+<span class="sd">        :param total: number of the images that model has trained on</span>
+<span class="sd">        :type total: int</span>
+<span class="sd">        :param train_acc: models accuracy on the provided train dataset</span>
+<span class="sd">        :type train_acc: str</span>
+<span class="sd">        :param test_acc: models accuracy on the optionally provided eval dataset</span>
+<span class="sd">        :type test_acc: str</span>
+<span class="sd">        :param elapsed: total time it took to run the epoch</span>
+<span class="sd">        :type elapsed: str</span>
+<span class="sd">        :param eta: an estimated time when training will end</span>
+<span class="sd">        :type eta: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="OutputPolicy.training_finished"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.OutputPolicy.training_finished">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">training_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">now</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called once when training has finished.</span>
+
+<span class="sd">        :param start: time when the training has started</span>
+<span class="sd">        :type start: datetime.datetime</span>
+<span class="sd">        :param now: current time</span>
+<span class="sd">        :type now: datetime.datetime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="OutputPolicy.accuracy_summary_basic"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.OutputPolicy.accuracy_summary_basic">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">accuracy_summary_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called after a model evaluation finishes if verbosity is set to 1.</span>
+
+<span class="sd">        :param total: number of total objects model was evaluated on</span>
+<span class="sd">        :type total: int</span>
+<span class="sd">        :param correct: number of correctly classified objects</span>
+<span class="sd">        :type correct: int</span>
+<span class="sd">        :param acc: overall accuracy of the model</span>
+<span class="sd">        :type acc: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="OutputPolicy.accuracy_summary_extended"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.OutputPolicy.accuracy_summary_extended">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called after a model evaluation finishes if verbosity is equal or greater than 2.</span>
+
+<span class="sd">        :param classes: list with class names on which model was evaluated</span>
+<span class="sd">        :type classes: list</span>
+<span class="sd">        :param class_total: list with a number of classes on which model was evaluated</span>
+<span class="sd">        :type class_total: list</span>
+<span class="sd">        :param class_correct: list with a number of properly classified classes</span>
+<span class="sd">        :type class_correct: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="ToConsole"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsole">[docs]</a><span class="k">class</span> <span class="nc">ToConsole</span><span class="p">(</span><span class="n">OutputPolicy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This policy allows to output training statistics to the console&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kc">None</span>
+
+<div class="viewcode-block" id="ToConsole.training_header"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsole.training_header">[docs]</a>    <span class="k">def</span> <span class="nf">training_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints a training header to the console&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;| Epoch | Avg. loss | Train Acc. | Test Acc.  | Elapsed  |   ETA    |</span><span class="se">\n</span><span class="s1">&#39;</span>
+              <span class="s1">&#39;|-------+-----------+------------+------------+----------+----------|&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToConsole.training_epoch_stats"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsole.training_epoch_stats">[docs]</a>    <span class="k">def</span> <span class="nf">training_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function is called every time an epoch ends, all of the important training statistics are taken as</span>
+<span class="sd">        an input and outputted to the console.</span>
+
+<span class="sd">       :param epoch: current training epoch epoch</span>
+<span class="sd">       :type epoch: int</span>
+<span class="sd">       :param running_loss: current total running loss of the model</span>
+<span class="sd">       :type running_loss: float</span>
+<span class="sd">       :param total: number of the images that model has trained on</span>
+<span class="sd">       :type total: int</span>
+<span class="sd">       :param train_acc: models accuracy on the provided train dataset</span>
+<span class="sd">       :type train_acc: str</span>
+<span class="sd">       :param test_acc: models accuracy on the optionally provided eval dataset</span>
+<span class="sd">       :type test_acc: str</span>
+<span class="sd">       :param elapsed: total time it took to run the epoch</span>
+<span class="sd">       :type elapsed: str</span>
+<span class="sd">       :param eta: an estimated time when training will end</span>
+<span class="sd">       :type eta: str</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;| </span><span class="si">{:5d}</span><span class="s1"> | </span><span class="si">{:.7f}</span><span class="s1"> | </span><span class="si">{:10s}</span><span class="s1"> | </span><span class="si">{:10s}</span><span class="s1"> | </span><span class="si">{:8s}</span><span class="s1"> | </span><span class="si">{}</span><span class="s1"> |&#39;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span> <span class="o">/</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ToConsole.training_finished"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsole.training_finished">[docs]</a>    <span class="k">def</span> <span class="nf">training_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">now</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs elapsed training time to the console.</span>
+
+<span class="sd">        :param start: time when the training has started</span>
+<span class="sd">        :type start: datetime.datetime</span>
+<span class="sd">        :param now: current time</span>
+<span class="sd">        :type now: datetime.datetime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Training finished, total time elapsed: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ToConsole.accuracy_summary_basic"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsole.accuracy_summary_basic">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy_summary_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs model evaluation statistics to the console if verbosity is set to 1.</span>
+
+<span class="sd">        :param total: number of total objects model was evaluated on</span>
+<span class="sd">        :type total: int</span>
+<span class="sd">        :param correct: number of correctly classified objects</span>
+<span class="sd">        :type correct: int</span>
+<span class="sd">        :param acc: overall accuracy of the model</span>
+<span class="sd">        :type acc: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total: </span><span class="si">{}</span><span class="s1"> -- Correct: </span><span class="si">{}</span><span class="s1"> -- Accuracy: </span><span class="si">{}</span><span class="s1">%</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ToConsole.accuracy_summary_extended"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsole.accuracy_summary_extended">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs model evaluation statistics to the console if  verbosity is equal or greater than 2.</span>
+
+<span class="sd">        :param classes: list with class names on which model was evaluated</span>
+<span class="sd">        :type classes: list</span>
+<span class="sd">        :param class_total: list with a number of classes on which model was evaluated</span>
+<span class="sd">        :type class_total: list</span>
+<span class="sd">        :param class_correct: list with a number of properly classified classes</span>
+<span class="sd">        :type class_correct: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;| </span><span class="si">{}</span><span class="s1"> | </span><span class="si">{}</span><span class="s1"> | </span><span class="si">{}</span><span class="s1"> |&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">classes</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_total</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_correct</span><span class="p">)))</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">class_total</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">class_acc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">class_correct</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">class_total</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">class_acc</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">class_total</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">class_correct</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">class_acc</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Class&#39;</span><span class="p">,</span> <span class="s1">&#39;Total&#39;</span><span class="p">,</span> <span class="s1">&#39;Correct&#39;</span><span class="p">,</span> <span class="s1">&#39;Acc&#39;</span><span class="p">],</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;orgtbl&#39;</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ToExcelFile"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile">[docs]</a><span class="k">class</span> <span class="nc">ToExcelFile</span><span class="p">(</span><span class="n">OutputPolicy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This policy allows to output training statistics to the excel file&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">override_content</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructs ToExcelFile and opens/creates an excel file.</span>
+
+<span class="sd">        :param file_path: path to an excel file</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param override_content: if file is present should we override its content</span>
+<span class="sd">        :type override_content: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;file_path parameter should be a string&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">override_content</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;override_content parameter should be a bool&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workbook</span> <span class="o">=</span> <span class="n">openpyxl</span><span class="o">.</span><span class="n">load_workbook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workbook</span> <span class="o">=</span> <span class="n">openpyxl</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workbook</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sheet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workbook</span><span class="o">.</span><span class="n">active</span>
+
+        <span class="c1"># check whenever A1 has been written to if yes go down until we find a Ax that is free</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">override_content</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">sheet</span><span class="p">[</span><span class="s2">&quot;A&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">row</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs a delimiter line to the excel file and saves it&quot;&quot;&quot;</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-----&quot;</span><span class="p">,</span> <span class="s2">&quot;-----&quot;</span><span class="p">,</span> <span class="s2">&quot;-----&quot;</span><span class="p">,</span> <span class="s2">&quot;-----&quot;</span><span class="p">,</span> <span class="s2">&quot;-----&quot;</span><span class="p">,</span> <span class="s2">&quot;-----&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workbook</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ToExcelFile.training_header"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile.training_header">[docs]</a>    <span class="k">def</span> <span class="nf">training_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs a training header to the excel file&quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg. loss&quot;</span><span class="p">,</span> <span class="s2">&quot;Train Acc.&quot;</span><span class="p">,</span> <span class="s2">&quot;Test Acc.&quot;</span><span class="p">,</span> <span class="s2">&quot;Elapsed&quot;</span><span class="p">,</span> <span class="s2">&quot;ETA&quot;</span><span class="p">]</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToExcelFile.training_epoch_stats"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile.training_epoch_stats">[docs]</a>    <span class="k">def</span> <span class="nf">training_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function is called every time an epoch ends, all of the important training statistics are taken as</span>
+<span class="sd">               an input and outputted to the specified excel file.</span>
+
+<span class="sd">       :param epoch: current training epoch epoch</span>
+<span class="sd">       :type epoch: int</span>
+<span class="sd">       :param running_loss: current total running loss of the model</span>
+<span class="sd">       :type running_loss: float</span>
+<span class="sd">       :param total: number of the images that model has trained on</span>
+<span class="sd">       :type total: int</span>
+<span class="sd">       :param train_acc: models accuracy on the provided train dataset</span>
+<span class="sd">       :type train_acc: str</span>
+<span class="sd">       :param test_acc: models accuracy on the optionally provided eval dataset</span>
+<span class="sd">       :type test_acc: str</span>
+<span class="sd">       :param elapsed: total time it took to run the epoch</span>
+<span class="sd">       :type elapsed: str</span>
+<span class="sd">       :param eta: an estimated time when training will end</span>
+<span class="sd">       :type eta: str</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:5d}</span><span class="s1"> </span><span class="si">{:.7f}</span><span class="s1"> </span><span class="si">{:10s}</span><span class="s1"> </span><span class="si">{:10s}</span><span class="s1"> </span><span class="si">{:8s}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>\
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span> <span class="o">/</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToExcelFile.training_finished"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile.training_finished">[docs]</a>    <span class="k">def</span> <span class="nf">training_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">now</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called once when training has finished, it outputs the elapsed time to the specified excel file.</span>
+
+<span class="sd">        :param start: time when the training has started</span>
+<span class="sd">        :type start: datetime.datetime</span>
+<span class="sd">        :param now: current time</span>
+<span class="sd">        :type now: datetime.datetime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Training finished in&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToExcelFile.accuracy_summary_basic"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile.accuracy_summary_basic">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy_summary_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called after a model evaluation finishes if verbosity is set to 1. Outputs a training statistics to the</span>
+<span class="sd">        specified excel file.</span>
+
+<span class="sd">        :param total: number of total objects model was evaluated on</span>
+<span class="sd">        :type total: int</span>
+<span class="sd">        :param correct: number of correctly classified objects</span>
+<span class="sd">        :type correct: int</span>
+<span class="sd">        :param acc: overall accuracy of the model</span>
+<span class="sd">        :type acc: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">]</span>
+        <span class="n">header_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Total&quot;</span><span class="p">,</span> <span class="s2">&quot;Correct&quot;</span><span class="p">,</span> <span class="s2">&quot;Accuracy&quot;</span><span class="p">]</span>
+        <span class="n">data_list</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">header_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToExcelFile.accuracy_summary_extended"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile.accuracy_summary_extended">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called after a model evaluation finishes if verbosity is equal or greater than 2.</span>
+<span class="sd">        Outputs a training statistics to the specified excel file.</span>
+
+<span class="sd">        :param classes: list with class names on which model was evaluated</span>
+<span class="sd">        :type classes: list</span>
+<span class="sd">        :param class_total: list with a number of classes on which model was evaluated</span>
+<span class="sd">        :type class_total: list</span>
+<span class="sd">        :param class_correct: list with a number of properly classified classes</span>
+<span class="sd">        :type class_correct: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">]</span>
+        <span class="n">header_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Class&quot;</span><span class="p">,</span> <span class="s2">&quot;Total&quot;</span><span class="p">,</span> <span class="s2">&quot;Correct&quot;</span><span class="p">,</span> <span class="s2">&quot;Accuracy&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">header_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">class_total</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">class_acc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">class_correct</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">class_total</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">class_acc</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+            <span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">class_total</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">class_correct</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">class_acc</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_row</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToExcelFile.print_row"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToExcelFile.print_row">[docs]</a>    <span class="k">def</span> <span class="nf">print_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">cells</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function writes each entry from data_list into a separate cell.</span>
+
+<span class="sd">        :param data_list: list with data to be written</span>
+<span class="sd">        :type data_list: list</span>
+<span class="sd">        :param cells: list with column names. Should have at least as many entries as data_list.</span>
+<span class="sd">        :type cells: list</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sheet</span><span class="p">[</span><span class="n">cells</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">row</span><span class="p">)]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workbook</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span></div></div>
+
+
+<div class="viewcode-block" id="ToConsoleAndExcelFile"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsoleAndExcelFile">[docs]</a><span class="k">class</span> <span class="nc">ToConsoleAndExcelFile</span><span class="p">(</span><span class="n">ToConsole</span><span class="p">,</span> <span class="n">ToExcelFile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This output policy is a composition of ToConsole and ToExcelFile policies.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">override_content</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructs ToConsoleAndExcelFile and opens/creates a specified excel file.</span>
+
+<span class="sd">        :param file_path: path to an excel file</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param override_content: if file is present should we override its content</span>
+<span class="sd">        :type override_content: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ToConsole</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">override_content</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs a delimiter line to the excel file and saves it&quot;&quot;&quot;</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ToConsoleAndExcelFile.training_header"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsoleAndExcelFile.training_header">[docs]</a>    <span class="k">def</span> <span class="nf">training_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Outputs training header to the console and the specified excel file&quot;&quot;&quot;</span>
+        <span class="n">ToConsole</span><span class="o">.</span><span class="n">training_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="n">training_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToConsoleAndExcelFile.training_epoch_stats"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsoleAndExcelFile.training_epoch_stats">[docs]</a>    <span class="k">def</span> <span class="nf">training_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function is called every time an epoch ends, all of the important training statistics are taken</span>
+<span class="sd">        as an input and outputs them to the console and the specified excel file.</span>
+
+<span class="sd">       :param epoch: current training epoch epoch</span>
+<span class="sd">       :type epoch: int</span>
+<span class="sd">       :param running_loss: current total running loss of the model</span>
+<span class="sd">       :type running_loss: float</span>
+<span class="sd">       :param total: number of the images that model has trained on</span>
+<span class="sd">       :type total: int</span>
+<span class="sd">       :param train_acc: models accuracy on the provided train dataset</span>
+<span class="sd">       :type train_acc: str</span>
+<span class="sd">       :param test_acc: models accuracy on the optionally provided eval dataset</span>
+<span class="sd">       :type test_acc: str</span>
+<span class="sd">       :param elapsed: total time it took to run the epoch</span>
+<span class="sd">       :type elapsed: str</span>
+<span class="sd">       :param eta: an estimated time when training will end</span>
+<span class="sd">       :type eta: str</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="n">ToConsole</span><span class="o">.</span><span class="n">training_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="n">training_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">running_loss</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">test_acc</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToConsoleAndExcelFile.training_finished"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsoleAndExcelFile.training_finished">[docs]</a>    <span class="k">def</span> <span class="nf">training_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">now</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called once when training has finished. Outputs elapsed time to the console and the specified excel file.</span>
+
+<span class="sd">        :param start: time when the training has started</span>
+<span class="sd">        :type start: datetime.datetime</span>
+<span class="sd">        :param now: current time</span>
+<span class="sd">        :type now: datetime.datetime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ToConsole</span><span class="o">.</span><span class="n">training_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="n">training_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToConsoleAndExcelFile.accuracy_summary_basic"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsoleAndExcelFile.accuracy_summary_basic">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy_summary_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called after a model evaluation finishes if verbosity is set to 1. Outputs the training statistics to</span>
+<span class="sd">        the console and to the specified excel file.</span>
+
+<span class="sd">        :param total: number of total objects model was evaluated on</span>
+<span class="sd">        :type total: int</span>
+<span class="sd">        :param correct: number of correctly classified objects</span>
+<span class="sd">        :type correct: int</span>
+<span class="sd">        :param acc: overall accuracy of the model</span>
+<span class="sd">        :type acc: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ToConsole</span><span class="o">.</span><span class="n">accuracy_summary_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="n">accuracy_summary_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ToConsoleAndExcelFile.accuracy_summary_extended"><a class="viewcode-back" href="../../gemicai.html#gemicai.output_policies.ToConsoleAndExcelFile.accuracy_summary_extended">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Called after a model evaluation finishes if verbosity is equal or greater than 2. Outputs the training</span>
+<span class="sd">        statistics to the console and to the specified excel file.</span>
+
+<span class="sd">        :param classes: list with class names on which model was evaluated</span>
+<span class="sd">        :type classes: list</span>
+<span class="sd">        :param class_total: list with a number of classes on which model was evaluated</span>
+<span class="sd">        :type class_total: list</span>
+<span class="sd">        :param class_correct: list with a number of properly classified classes</span>
+<span class="sd">        :type class_correct: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ToConsole</span><span class="o">.</span><span class="n">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">)</span>
+        <span class="n">ToExcelFile</span><span class="o">.</span><span class="n">accuracy_summary_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">class_total</span><span class="p">,</span> <span class="n">class_correct</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

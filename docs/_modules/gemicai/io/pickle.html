@@ -1,0 +1,339 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.io.pickle &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.io.pickle</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.io.pickle</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;IO module is used in order to interface with a file system. Entirety of this module is meant to be swapped out if</span>
+<span class="sd">superior tools or libraries arise in the future or more performance is needed.&quot;&quot;&quot;</span>
+
+<span class="c1"># All IO should be handled here, since easier to refactor code when we or someone else in the future decides that there</span>
+<span class="c1"># is something better than pickle to create .gemset and .gemnode etc.</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">gzip</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">gemicai</span> <span class="k">as</span> <span class="nn">gem</span>
+
+<span class="c1"># Supported object types</span>
+<span class="n">supported_ojbects</span> <span class="o">=</span> <span class="p">[</span><span class="n">gem</span><span class="o">.</span><span class="n">Classifier</span><span class="p">,</span> <span class="n">gem</span><span class="o">.</span><span class="n">ClassifierNode</span><span class="p">]</span>
+
+<span class="c1"># File extestions relative to object type.</span>
+<span class="n">file_extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.gemclas&#39;</span><span class="p">,</span> <span class="s1">&#39;.gemnode&#39;</span><span class="p">,</span> <span class="s1">&#39;.gemset&#39;</span><span class="p">]</span>
+
+<span class="c1"># TODO: add support for GemicaiDataset</span>
+<span class="c1"># FIXME: zipped=True seems to not be working on linux</span>
+
+
+<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../../gemicai.io.html#gemicai.io.pickle.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">zipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function saves a specified object in a given file.</span>
+
+<span class="sd">    :param file_path: valid path to a file. File itself does not have to exist.</span>
+<span class="sd">    :type file_path: str</span>
+<span class="sd">    :param obj: object to save</span>
+<span class="sd">    :type obj: Union[gem.Classifier, gem.ClassifierNode]</span>
+<span class="sd">    :param zipped: whenever the file should be zipped</span>
+<span class="sd">    :type zipped: bool</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_ojbects</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Object of type </span><span class="si">{}</span><span class="s1"> is not supported by gemicai.io&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">zipped</span><span class="p">:</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;ab+&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+        <span class="n">zip_to_file</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">get_path_with_extension</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">obj</span><span class="p">))</span>
+        <span class="n">temp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">get_path_with_extension</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">obj</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../gemicai.io.html#gemicai.io.pickle.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">zipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function is used to load back a Gemicai object from the file system.</span>
+
+<span class="sd">    :param file_path: valid path to a file</span>
+<span class="sd">    :type file_path: str</span>
+<span class="sd">    :param zipped: whenever the specified file is zipped</span>
+<span class="sd">    :type zipped: bool</span>
+<span class="sd">    :return: a valid Gemicai object</span>
+<span class="sd">    :raises Exception: raised if object could not have been loaded in</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">zipped</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inp</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="n">res_type</span> <span class="o">=</span> <span class="n">supported_ojbects</span><span class="p">[</span><span class="n">file_extensions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">!=</span> <span class="n">res_type</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> should contain object of type </span><span class="si">{}</span><span class="s1">, instead got </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">res_type</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">res</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="get_path_with_extension"><a class="viewcode-back" href="../../../gemicai.io.html#gemicai.io.pickle.get_path_with_extension">[docs]</a><span class="k">def</span> <span class="nf">get_path_with_extension</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns file path with a correct extension. Dependent on the object type.</span>
+
+<span class="sd">    :param file_path: path to a file without it&#39;s extension eg. /home/test/test_file. If correct extension is present</span>
+<span class="sd">        path will be changed</span>
+<span class="sd">    :type file_path: str</span>
+<span class="sd">    :param obj: object which extension type we want to return</span>
+<span class="sd">    :type obj: Union[gem.Classifier, gem.ClassifierNode]</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">file_extensions</span><span class="p">[</span><span class="n">supported_ojbects</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">))]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
+        <span class="n">file_path</span> <span class="o">+=</span> <span class="n">ext</span>
+    <span class="k">return</span> <span class="n">file_path</span></div>
+
+
+<div class="viewcode-block" id="zip_to_file"><a class="viewcode-back" href="../../../gemicai.io.html#gemicai.io.pickle.zip_to_file">[docs]</a><span class="k">def</span> <span class="nf">zip_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copies a content of a temporary file to the other and zips it.</span>
+
+<span class="sd">    :param file: temporary file which data will be zipped</span>
+<span class="sd">    :type file: tempfile._TemporaryFileWrapper</span>
+<span class="sd">    :param zip_path: a valid path to a zip file, file itself does not have to exist</span>
+<span class="sd">    :type zip_path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipped</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">zipped</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="unzip_to_file"><a class="viewcode-back" href="../../../gemicai.io.html#gemicai.io.pickle.unzip_to_file">[docs]</a><span class="k">def</span> <span class="nf">unzip_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unzips content of a file and copies it to the temporary file.</span>
+
+<span class="sd">    :param file: temporary file which should receive zipped file&#39;s data</span>
+<span class="sd">    :type file: tempfile._TemporaryFileWrapper</span>
+<span class="sd">    :param zip_path: a valid path to a zip file</span>
+<span class="sd">    :type zip_path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipped</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;ab+&#39;</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">zipped</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

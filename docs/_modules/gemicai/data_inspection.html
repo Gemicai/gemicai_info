@@ -1,0 +1,275 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.data_inspection &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.data_inspection</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.data_inspection</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Everything concerning inspecting data</span>
+<span class="kn">import</span> <span class="nn">gemicai</span> <span class="k">as</span> <span class="nn">gem</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+<span class="c1"># TODO: Implement so that this function actually writes back to gemset</span>
+<div class="viewcode-block" id="correct_dataset"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_inspection.correct_dataset">[docs]</a><span class="k">def</span> <span class="nf">correct_dataset</span><span class="p">(</span><span class="n">net</span><span class="p">:</span> <span class="n">gem</span><span class="o">.</span><span class="n">Classifier</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">gem</span><span class="o">.</span><span class="n">GemicaiDataset</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">label</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;True label: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">Prediction : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Overwrite class?&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Returns a pandas.DataFrame with meta data about a dicomos dataset</span>
+<div class="viewcode-block" id="generate_metadata_df"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_inspection.generate_metadata_df">[docs]</a><span class="k">def</span> <span class="nf">generate_metadata_df</span><span class="p">(</span><span class="n">dataset_folder</span><span class="p">):</span>
+    <span class="c1"># We want all dicomo labels</span>
+    <span class="n">dicomo_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Modality&#39;</span><span class="p">,</span> <span class="s1">&#39;BodyPartExamined&#39;</span><span class="p">,</span> <span class="s1">&#39;StudyDescription&#39;</span><span class="p">,</span> <span class="s1">&#39;SeriesDescription&#39;</span><span class="p">]</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">DicomoDataset</span><span class="o">.</span><span class="n">get_dicomo_dataset</span><span class="p">(</span><span class="n">dataset_folder</span><span class="p">,</span> <span class="n">dicomo_fields</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;modality&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">&#39;bpe&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="s1">&#39;studydes&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                <span class="s1">&#39;seriesdes&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></div>
+
+
+<span class="c1"># Makes an excel file for the metadata and puts it in the specified dataset folder</span>
+<div class="viewcode-block" id="generate_metadata_excel"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_inspection.generate_metadata_excel">[docs]</a><span class="k">def</span> <span class="nf">generate_metadata_excel</span><span class="p">(</span><span class="n">dataset_folder</span><span class="p">):</span>
+    <span class="n">generate_metadata_df</span><span class="p">(</span><span class="n">dataset_folder</span><span class="p">)</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s1">&#39;/home/nheinen/metadata.xlsx&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">generate_metadata_excel</span><span class="p">(</span><span class="s1">&#39;/mnt/SharedStor/dataset/PT&#39;</span><span class="p">)</span>
+
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>

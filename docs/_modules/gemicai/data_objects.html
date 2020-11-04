@@ -1,0 +1,398 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gemicai.data_objects &mdash; Gemicai 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/jquery.fancybox.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/glpi.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Gemicai 0.5.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gemicai
+          
+
+          
+          </a>
+
+          
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">gemicai</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gemicai</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>gemicai.data_objects</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gemicai.data_objects</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains data objects used by the Gemicai&#39;s iterators&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">gemicai</span> <span class="kn">import</span> <span class="n">dicom_utilities</span> <span class="k">as</span> <span class="n">du</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="DataObject"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DataObject">[docs]</a><span class="k">class</span> <span class="nc">DataObject</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Every custom data object should extend this abstract base class and call it&#39;s constructor.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">label_values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Default constructor which enforces some basic rules on it&#39;s children.</span>
+
+<span class="sd">        :param tensor: contains tensor</span>
+<span class="sd">        :type tensor: torch.Tensor</span>
+<span class="sd">        :param label_values: contains a list of tensor&#39;s labels</span>
+<span class="sd">        :type label_values: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;DataObject  expects tensor to be a torch.Tensor&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;DataObject expects labels parameter to be a list&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">label_values</span>
+
+<div class="viewcode-block" id="DataObject.plot"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DataObject.plot">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Call to this method should plot DataObject&#39;s tensor to the screen.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DataObject.from_file"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DataObject.from_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method should create and return a DataObject instance.</span>
+
+<span class="sd">        :param filename: path to a valid file name</span>
+<span class="sd">        :type filename: Union[os.path, str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="DicomObject"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DicomObject">[docs]</a><span class="k">class</span> <span class="nc">DicomObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gemicai&#39;s default data object &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">label_values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructs a DicomoObject from the given data.</span>
+
+<span class="sd">        :param tensor:</span>
+<span class="sd">        :type tensor: torch.Tensor</span>
+<span class="sd">        :param labels: list of image label types</span>
+<span class="sd">        :type labels: list</span>
+<span class="sd">        :param label_values: list of image label values</span>
+<span class="sd">        :type label_values: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;DataObject expects label_values parameter to be a list&quot;</span><span class="p">)</span>
+        <span class="n">DataObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">label_values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_types</span> <span class="o">=</span> <span class="n">labels</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a string representation of the labels held by this object.</span>
+
+<span class="sd">        :return: a string containing a list of tuples in a format (label_type, label_values)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)))</span>
+
+    <span class="c1"># Plots dicom image with some additional label info.</span>
+<div class="viewcode-block" id="DicomObject.plot"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DicomObject.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints labels and plots the tensor.</span>
+
+<span class="sd">        :param cmap: color scheme</span>
+<span class="sd">        :type cmap: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;cmap parameter should be a string&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DicomObject.get_value_of"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DicomObject.get_value_of">[docs]</a>    <span class="k">def</span> <span class="nf">get_value_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a label value of a given label type.</span>
+
+<span class="sd">        :param item: string with a objects label</span>
+<span class="sd">        :type item: str</span>
+<span class="sd">        :return: value of a label or None if the object does not contain it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;item parameter should be a string&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">label_types</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="DicomObject.meets_constraints"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DicomObject.meets_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">meets_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks whenever the object meets a certain type of criteria.</span>
+
+<span class="sd">        :param constraints: constraints to check against eg. {&#39;Modality&#39;: &#39;CT&#39;}</span>
+<span class="sd">        :type constraints: dict</span>
+<span class="sd">        :return: True if the object meets criteria, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;constraints parameter should be a dict&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value_of</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">!=</span> <span class="n">constraints</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DicomObject.from_file"><a class="viewcode-back" href="../../gemicai.html#gemicai.data_objects.DicomObject.from_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">tensor_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a DicomoObject from a specified file.</span>
+
+<span class="sd">        :param filename: a valid dicom file path</span>
+<span class="sd">        :type filename: Union[os.path, str]</span>
+<span class="sd">        :param labels: labels which values will be taken from the Dicom object. The pixel_array field should not be</span>
+<span class="sd">            specified as it is one of the default fields fetched internally.</span>
+<span class="sd">        :type labels: list</span>
+<span class="sd">        :param tensor_size: used to resize a tensor. If left unspecified it will try to use the current image size</span>
+<span class="sd">            otherwise it will use the specified values. Correct format ((int)x, (int)y)</span>
+<span class="sd">        :type tensor_size: Optional[tuple]</span>
+<span class="sd">        :return: DicomoObject instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;from_file: fields parameter should be a list of strings but is &quot;</span> <span class="o">+</span>
+                            <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">labels</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tensor_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tensor_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;rom_file: tensor_size parameter should be a tuple of two ints or be set to None but is&quot;</span> <span class="o">+</span>
+                            <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">tensor_size</span><span class="p">)))</span>
+
+        <span class="c1"># try to load a dicom file</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">du</span><span class="o">.</span><span class="n">load_dicom</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># transform pixel_array into a format accepted by the pytorch</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">pixel_array</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">pixel_array</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+        <span class="c1"># Because getattr() throws an AttributeError if the field is left empty in the dicom header</span>
+        <span class="k">def</span> <span class="nf">get_attr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">tensor_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">get_attr</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s2">&quot;Rows&quot;</span><span class="p">)</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">get_attr</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s2">&quot;Columns&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rows</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot fetch a default tensor sizes, &quot;</span>
+                                   <span class="s2">&quot;please provide a custom one by passing tensor_size parameter&quot;</span><span class="p">)</span>
+            <span class="n">tensor_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># if we want to print the resulting image remove the last transform and call tensor.show() after create_tensor</span>
+        <span class="n">create_tensor</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+            <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">(),</span>
+            <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="n">tensor_size</span><span class="p">),</span>
+            <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()</span>
+        <span class="p">])</span>
+
+        <span class="n">label_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># fetch specified labels and return a Dicomo object</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="n">label_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_attr</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">DicomObject</span><span class="p">(</span><span class="n">create_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labels</span><span class="p">,</span> <span class="n">label_values</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Kevin Alberts, Niek Heinen, Mateusz Jaworski, Sieta de Jong.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.5.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.fancybox.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+  <script type="text/javascript">
+    $(function(){
+      $('.image-reference').fancybox();
+    })
+  </script>
+
+</body>
+</html>
