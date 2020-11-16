@@ -52,12 +52,11 @@ export default [
         contents: tutorial4Content
     }, {
         id: 5,
-        title: "ClassifierTree Advanced",
+        title: "ClassifierTree: Advanced",
         sections: [
-            {name: "Initialising ClassifierTree", anchor: "3.1-Initialising-ClassifierTree"},
-            {name: "Training the tree", anchor: "3.2-Training-the-tree"},
-            {name: "Evaluating the tree", anchor: "3.3-Evaluating-the-tree"},
-            {name: "Tweaking individual nodes in the tree", anchor: "3.4-Tweaking-individual-nodes-in-the-tree"},
+            {name: "Recap", anchor: "5.1-Recap"},
+            {name: "Tweaking individual nodes in the tree", anchor: "5.2-Tweaking-individual-nodes-in-the-tree"},
+            {name: "Additional techniques for improved performance", anchor: "5.3-Additional-techniques-for-improved-performance"},
         ],
         pynb_link: "https://github.com/Gemicai/Gemicai/blob/master/tutorials/gemicai_tutorial_5.ipynb",
         contents: tutorial5Content
