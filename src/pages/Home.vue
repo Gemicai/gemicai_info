@@ -23,10 +23,10 @@
               <q-img class="col-4 q-ma-lg" src="../assets/researcher.png"/>
               <q-card-section class="flex column justify-center items-start">
                 <div class="text-h5 q-pb-md text-left">Medical imaging research platform</div>
-                <p class="text-subtitle1 q-mb-none text-left">Gemicai is an open source deep learning library with
-                  extensive functionality for the DICOM standard. This makes it an excellent tool for medical imaging AI
-                  research. Among other things, Gemicai makes data pre-processing a breeze and automatically configures
-                  GPU hardware acceleration. This leaves researchers more time for the research that matters.</p>
+                <p class="text-subtitle1 q-mb-none text-left">Gemicai is an open-source deep-learning library with extensive functionality for the Dicom standard. 
+                  Its functionalities and applicability make Gemicai an excellent tool for research concerning artificial intelligence in medical imaging. A key benefit of 
+                  Gemicai is making data pre-processing practical and easy to use while automatically configuring the GPU hardware acceleration. This enables researchers to 
+                  save time on ordinary tasks so that they can focus on more important matters. </p>
               </q-card-section>
             </q-card-section>
           </q-card>
