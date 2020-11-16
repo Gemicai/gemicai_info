@@ -116,6 +116,13 @@ export default {
     openGitHub() {
       window.open("https://github.com/Gemicai/Gemicai", "_blank")
     }
+  },
+  mounted() {
+    let path = localStorage.getItem('path');
+    if(path) {
+      localStorage.removeItem('path');
+      this.$router.push(path);
+    }
   }
 }
 </script>
